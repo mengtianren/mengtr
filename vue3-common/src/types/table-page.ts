@@ -162,7 +162,6 @@ export type TFormItemType =
   | 'switch'
   | 'datepicker'
   | 'rangepicker'
-  | 'editor'
   | 'component'
   | 'object'
   | 'array'
@@ -216,9 +215,6 @@ export interface IRangePickerFormItem extends IBaseFormItem {
   type: 'rangepicker'
 }
 
-export interface IEditorFormItem extends IBaseFormItem {
-  type: 'editor'
-}
 
 export interface IComponentFormItem extends IBaseFormItem {
   type: 'component'
@@ -243,7 +239,6 @@ export type IFormItem =
   | ISwitchFormItem
   | IDatePickerFormItem
   | IRangePickerFormItem
-  | IEditorFormItem
   | IComponentFormItem
   | IObjectFormItem
   | IArrayFormItem
