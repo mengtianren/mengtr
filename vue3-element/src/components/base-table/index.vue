@@ -6,7 +6,12 @@
         :prop="item.dataIndex || item.key" :label="item.title" :width="item.width">
         <template #default="{ row, column, $index }">
           <slot name="bodyCell" :column="column" :record="row" :text="row[column.property]" :index="$index">
-            {{ row[column.property] || '' }}
+            <template v-if="item?.customRender">
+              {{ item.customRender({ text: row[column.property] || '' }) }}
+            </template>
+           <template v-else>
+             {{ row[column.property] || '' }}
+           </template>
           </slot>
         </template>
       </el-table-column>
@@ -16,7 +21,7 @@
         size="default" layout="slot, prev, pager, next, sizes" :total="pagination.total"
         :page-sizes="pagination.pageSizeOptions" @size-change="e => pagination.onChange(pagination.current, e)"
         @current-change="e => pagination.onChange(e, pagination.pageSize)">
-        <template #default>总条数：{{ pagination.total || 0}}</template>
+        <template #default>总条数：{{ pagination.total || 0 }}</template>
       </el-pagination>
     </div>
   </div>
@@ -35,6 +40,7 @@ interface ColumnProps {
   key?: string,
   width: number | string
   align?: string
+  customRender?: (h: any) => any
 }
 
 
@@ -99,8 +105,8 @@ defineExpose({
 })
 </script>
 <style scoped lang="less">
-  .gc-table-pagination{
-    margin-top: 24px;
-    text-align: right;
-  }
+.gc-table-pagination {
+  margin-top: 24px;
+  text-align: right;
+}
 </style>
