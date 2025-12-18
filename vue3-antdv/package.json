@@ -1,0 +1,46 @@
+{
+  "name": "@mengtr/vue3-antdv",
+  "version": "1.0.3",
+  "type": "module",
+  "main": "lib/vue3-antdv.es.js",
+  "module": "lib/vue3-antdv.es.js",
+  "types": "lib/types/index.d.ts",
+  "style": "lib/vue3-antdv.css",
+  "private": false,
+  "files": [
+    "lib",
+    "package.json"
+  ],
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./lib/types/index.d.ts",
+        "default": "./lib/vue3-antdv.es.js"
+      },
+      "require": null
+    },
+    "./style": "./lib/vue3-antdv.css"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "scripts": {
+    "build": "vue-tsc -b && vite build",
+    "patch": "pnpm version patch && pnpm build",
+    "major": "pnpm version major && pnpm build",
+    "pub": "pnpm run patch && pnpm -r publish  --access public"
+  },
+  "peerDependencies": {
+    "@ant-design/icons-vue": "^7.0.1",
+    "@wangeditor/editor": "^5.1.23",
+    "@wangeditor/editor-for-vue": "^5.1.12",
+    "ant-design-vue": "^4.2.4",
+    "lodash-es": "^4.17.0",
+    "vue": "^3.5.0"
+  },
+  "devDependencies": {},
+  "dependencies": {
+    "@mengtr/vue3-common": "workspace:*"
+  }
+}

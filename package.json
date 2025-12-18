@@ -1,25 +1,25 @@
 {
-  "name": "@mengtr/page",
-  "version": "0.0.4",
-  "type": "module",
-  "main": "lib/page.umd.js",
-  "module": "lib/page.es.js",
-  "types": "lib/index.d.ts",
+  "name": "mengtr",
   "private": false,
-  "files": [
-    "lib",
-    "package.json"
-  ],
   "scripts": {
-    "dev": "vite",
-    "build": "vue-tsc -b && vite build",
-    "preview": "vite preview"
+    "build:common": "pnpm --filter @mengtr/vue3-common build",
+    "publish:common": "pnpm --filter @mengtr/vue3-common pub --no-git-checks",
+    "build:antdv": "pnpm --filter @mengtr/vue3-antdv build",
+    "publish:antdv": "pnpm --filter @mengtr/vue3-antdv pub --no-git-checks",
+     "build:element": "pnpm --filter @mengtr/vue3-element build",
+    "publish:element": "pnpm --filter @mengtr/vue3-element pub --no-git-checks",
+    "build:all": "pnpm build:common && pnpm build:antdv && pnpm build:element",
+    "publish:all": "pnpm publish:common && pnpm publish:antdv && pnpm publish:element"
   },
   "dependencies": {
-    "@mengtr/page": "file:",
-    "ant-design-vue": "^4.2.6",
-    "lodash-es": "^4.17.21",
-    "vue": "^3.5.13"
+    "@ant-design/icons-vue": "^7.0.1",
+    "@element-plus/icons-vue": "^2.3.2",
+    "@wangeditor/editor": "^5.1.23",
+    "@wangeditor/editor-for-vue": "^5.1.12",
+    "ant-design-vue": "^4.2.4",
+    "element-plus": "^2.12.0",
+    "lodash-es": "^4.17.0",
+    "vue": "^3.5.0"
   },
   "devDependencies": {
     "@types/lodash-es": "^4.17.12",
@@ -27,9 +27,16 @@
     "@vitejs/plugin-vue": "^5.2.3",
     "@vue/tsconfig": "^0.7.0",
     "less": "^4.3.0",
+    "terser": "^5.44.1",
     "typescript": "~5.8.3",
     "vite": "^6.3.5",
-    "vite-plugin-dts": "^4.5.3",
+    "vite-plugin-dts": "^4.5.4",
     "vue-tsc": "^2.2.8"
+  },
+  "pnpm": {
+    "overrides": {
+      "vue": "^3.5.0",
+      "lodash-es": "^4.17.0"
+    }
   }
 }

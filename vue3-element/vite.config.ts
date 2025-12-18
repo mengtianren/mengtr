@@ -1,0 +1,84 @@
+import { fileURLToPath, URL } from 'node:url'
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import ElementPlus from 'unplugin-element-plus/vite'
+import dts from 'vite-plugin-dts'
+export default defineConfig({
+  plugins: [vue(),
+    ElementPlus({}),
+  dts({
+    tsconfigPath: './tsconfig.json',
+    insertTypesEntry: true,
+    outDir: 'lib/types',
+    compilerOptions: {
+      skipLibCheck: true,
+    }
+  }),
+  ],
+  resolve: {
+    alias: {
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+    },
+    // 优化解析性能
+    extensions: ['.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json', '.vue'],
+  },
+  // 优化开发和构建缓存
+  cacheDir: 'node_modules/.vite',
+  build: {
+    outDir: 'lib',
+    // 开启最小化
+    minify: 'terser',
+    // 配置 terser 压缩选项
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+        pure_funcs: ['console.log'],
+      },
+    },
+    // 优化 CSS 处理
+    cssCodeSplit: false,
+    sourcemap: false,
+    // 配置 chunk 大小警告限制
+    chunkSizeWarningLimit: 1000,
+    lib: {
+      entry: 'src/index.ts',
+      name: 'vue3-element',
+      fileName: (format) => `vue3-element.${format}.js`,
+      cssFileName: "vue3-element",
+      formats: ['es'],
+    },
+    rollupOptions: {
+      // 确保所有第三方库都正确标记为外部依赖
+      external: [
+        'vue',
+        'element-plus',
+        'lodash-es',
+        'less',
+        '@element-plus/icons-vue',
+        '@wangeditor/editor',
+        '@wangeditor/editor-for-vue',
+      ],
+      output: {
+        exports: "named",
+        globals: {
+          vue: 'Vue',
+          'element-plus': 'ElementPlus',
+          '@element-plus/icons-vue': 'ElementPlusIconsVue',
+          'lodash-es': 'LodashEs',
+          '@wangeditor/editor': 'WangeditorEditor',
+          '@wangeditor/editor-for-vue': 'WangeditorEditorForVue',
+        },
+        // 优化输出格式
+        compact: true,
+      },
+      // 配置 tree-shaking 以移除未使用的代码
+      treeshake: {
+        preset: 'smallest',
+        moduleSideEffects: false,
+      },
+      // 优化构建性能
+      cache: true,
+    }
+  }
+})

@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "strict": true,
+    "declaration": true,               // ✅ 开启类型声明文件生成
+    "emitDeclarationOnly": true,      // ✅ 仅生成 .d.ts
+    "outDir": "lib",           // ✅ 输出目录
+    "baseUrl": ".",                   // ✅ 支持路径别名
+    
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "jsx": "preserve",
+    "skipLibCheck": true,
+    "sourceMap": false
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist", "lib"]
+}

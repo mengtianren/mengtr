@@ -1,0 +1,6 @@
+packages:
+  - 'vue3-antdv'          # 匹配vue3-antdv子包
+  - 'vue3-element'          # 匹配vue3-element子包
+  - 'vue3-common'          # 匹配vue3-common子包
+  - '!**/node_modules'     # 排除 node_modules
+  - '!**/lib'             # 排除构建产物
