@@ -62,7 +62,9 @@
               :disabled="field.disabled || disabled" />
             <el-tree-select v-else-if="field.type.toLowerCase() === 'treeselect'"
               :modelValue="getValue(formData, [...fieldPath, field.name])"
-              @update:modelValue="e => setValue([...fieldPath, field.name], e)" v-bind="(field.config || {})"
+              @update:modelValue="e => setValue([...fieldPath, field.name], e)" :data="field.config?.treeData || []"
+              :props="field.config?.fieldNames || { label: 'label', value: 'value', children: 'children' }"
+              :check-strictly="field.config?.showCheckedStrategy ? true : false" v-bind="(field.config || {})"
               :disabled="field.disabled || disabled" />
             <EditorPage v-else-if="field.type.toLowerCase() === 'editor'"
               :value="getValue(formData, [...fieldPath, field.name])"
