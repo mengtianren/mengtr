@@ -7,6 +7,14 @@
   "types": "lib/types/index.d.ts",
   "style": "lib/vue3-antdv.css",
   "private": false,
+  "author": {
+    "name": "mengtren",
+    "email": "mtreen@163.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mengtianren/mengtr.git"
+  },
   "files": [
     "lib",
     "package.json"

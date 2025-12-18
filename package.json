@@ -1,13 +1,25 @@
 {
   "name": "mengtr",
   "private": false,
+  "author": {
+    "name": "mengtren",
+    "email": "mtreen@163.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mengtianren/mengtr.git"
+  },
+  "homepage": "https://github.com/mengtianren/mengtr",
+  "bugs": {
+    "url": "https://github.com/mengtianren/mengtr/issues"
+  },
   "scripts": {
     "build:common": "pnpm --filter @mengtr/vue3-common build",
-    "publish:common": "pnpm --filter @mengtr/vue3-common pub --no-git-checks",
+    "publish:common": "pnpm --filter @mengtr/vue3-common pub",
     "build:antdv": "pnpm --filter @mengtr/vue3-antdv build",
-    "publish:antdv": "pnpm --filter @mengtr/vue3-antdv pub --no-git-checks",
+    "publish:antdv": "pnpm --filter @mengtr/vue3-antdv pub ",
      "build:element": "pnpm --filter @mengtr/vue3-element build",
-    "publish:element": "pnpm --filter @mengtr/vue3-element pub --no-git-checks",
+    "publish:element": "pnpm --filter @mengtr/vue3-element pub",
     "build:all": "pnpm build:common && pnpm build:antdv && pnpm build:element",
     "publish:all": "pnpm publish:common && pnpm publish:antdv && pnpm publish:element"
   },

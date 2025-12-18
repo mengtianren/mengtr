@@ -3,6 +3,14 @@
   "version": "1.0.2",
   "private": false,
   "type": "module",
+  "author": {
+    "name": "mengtren",
+    "email": "mtreen@163.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mengtianren/mengtr.git"
+  },
   "main": "./lib/vue3-common.es.js",
   "types": "./lib/types/index.d.ts",
   "files": [
