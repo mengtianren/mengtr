@@ -3,15 +3,17 @@
     <el-table :data="tableData" style="width: 100%" :rowKey="rowKey"
       :row-class-name="({ rowIndex }) => (rowIndex % 2 === 1 ? 'table-striped' : '')" :border="bordered">
       <el-table-column v-for="item in centerColumns" :key="item.dataIndex || item.key"
-        :prop="item.dataIndex || item.key" :label="item.title" :width="item.width">
+        :prop="item.dataIndex || item.key" :label="item.title" :width="item.width || 150" :fixed="item?.fixed || false">
         <template #default="{ row, column, $index }">
-          <slot name="bodyCell" :column="column" :record="row" :text="row[column.property]" :index="$index">
+
+          <slot name="bodyCell" :column="{ ...column, dataIndex: column.property }" :record="row"
+            :text="row[column.property]" :index="$index">
             <template v-if="item?.customRender">
-              {{ item.customRender({ text: row[column.property] || '',index: $index }) }}
+              {{ item.customRender({ text: row[column.property] || '', index: $index }) }}
             </template>
-           <template v-else>
-             {{ row[column.property] || '' }}
-           </template>
+            <template v-else>
+              {{ row[column.property] || '' }}
+            </template>
           </slot>
         </template>
       </el-table-column>
@@ -41,6 +43,7 @@ interface ColumnProps {
   width: number | string
   align?: string
   customRender?: (h: any) => any
+  fixed?: 'left' | 'right'
 }
 
 
