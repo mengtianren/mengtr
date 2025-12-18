@@ -1,9 +1,9 @@
 <template>
   <div class="gc-table">
-    <el-table :data="tableData" style="width: 100%" :rowKey="rowKey"
+    <el-table :data="tableData" style="width: 100%" :rowKey="rowKey" table-layout="auto"
       :row-class-name="({ rowIndex }) => (rowIndex % 2 === 1 ? 'table-striped' : '')" :border="bordered">
       <el-table-column v-for="item in centerColumns" :key="item.dataIndex || item.key"
-        :prop="item.dataIndex || item.key" :label="item.title" :width="item.width || 150" :fixed="item?.fixed || false">
+        :prop="item.dataIndex || item.key" :label="item.title" :width="item.width" :fixed="item?.fixed || false">
         <template #default="{ row, column, $index }">
 
           <slot name="bodyCell" :column="{ ...column, dataIndex: column.property }" :record="row"
@@ -19,7 +19,7 @@
       </el-table-column>
     </el-table>
     <div class="gc-table-pagination">
-      <el-pagination v-if="pagination" v-model:current-page="pagination.current" :page-size="pagination.pageSize"
+      <el-pagination v-if="pagination" v-model:current-page="pagination.current" :page-size="pagination.pageSize" style="justify-content: flex-end;"
         size="default" layout="slot, prev, pager, next, sizes" :total="pagination.total"
         :page-sizes="pagination.pageSizeOptions" @size-change="e => pagination.onChange(pagination.current, e)"
         @current-change="e => pagination.onChange(e, pagination.pageSize)">
