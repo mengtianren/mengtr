@@ -1,6 +1,6 @@
 {
   "name": "@mengtr/vue3-common",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "private": false,
   "type": "module",
   "author": {
@@ -31,7 +31,7 @@
     "build": "vue-tsc -b && vite build",
     "patch": "pnpm version patch && pnpm build",
     "major": "pnpm version major && pnpm build",
-    "pub": "pnpm run patch && git add . && git commit -m \"@mengtr/vue3-common to v$(node -p \"require('./package.json').version\")\"&& pnpm -r publish  --access public"
+    "pub": "pnpm run patch && git add . && git commit -m \"@mengtr/vue3-common: 版本升级\" && npm publish --access public"
   },
   "peerDependencies": {
     "vue": "^3.5.0",

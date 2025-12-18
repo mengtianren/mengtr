@@ -1,6 +1,6 @@
 {
   "name": "@mengtr/vue3-antdv",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "type": "module",
   "main": "lib/vue3-antdv.es.js",
   "module": "lib/vue3-antdv.es.js",
@@ -37,8 +37,7 @@
     "build": "vue-tsc -b && vite build",
     "patch": "pnpm version patch && pnpm build",
     "major": "pnpm version major && pnpm build",
-    "pub": "pnpm run patch && git add . && git commit -m \"@mengtr/vue3-antdv to v$(node -p \"require('./package.json').version\")\"&& pnpm -r publish  --access public"
-
+    "pub": "pnpm run patch && git add . && git commit -m \"@mengtr/vue3-antdv: 版本升级\" && npm publish --access public"
   },
   "peerDependencies": {
     "@ant-design/icons-vue": "^7.0.1",
