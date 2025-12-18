@@ -8,7 +8,6 @@ import GSearch from '@/components/gc-search/index.vue';
 import GTable from '@/components/gc-table/index.vue';
 import GModal from '@/components/gc-modal/index.vue';
 import GForm from '@/components/gc-form/index.vue';
-import GEditor from '@/components/gc-items/editor/index.vue';
 import BaseTable from '@/components/base-table/index.vue';
 // 即将废弃 不再导出
 import GFormItem from '@/components/gc-items/index.vue';
@@ -46,7 +45,6 @@ const install = (app: App): App => {
   app.component('GSearch', GSearch); // 搜索功能页面
   app.component('GTable', GTable);    // 表格+弹窗页面
   app.component('GModal', GModal);    // 弹窗页面 需要使用modal 
-  app.component('GEditor', GEditor);   // 富文本页面
   app.component('GForm', GForm);       // 表单页面
   app.component('GFormItem', GFormItem); // 表单字段组件
   app.component("BaseTable", BaseTable); // 基础表格组件
@@ -54,7 +52,7 @@ const install = (app: App): App => {
   return app;
 };
 
-export { GPage, GPage as GTablePage, GSearch, GTable, GModal, GEditor, GForm, GFormItem, BaseTable };
+export { GPage, GPage as GTablePage, GSearch, GTable, GModal, GForm, GFormItem, BaseTable };
 // 全局导入用
 export default {
   install,

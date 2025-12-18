@@ -56,8 +56,6 @@ export default defineConfig({
         'lodash-es',
         'less',
         '@element-plus/icons-vue',
-        '@wangeditor/editor',
-        '@wangeditor/editor-for-vue',
       ],
       output: {
         exports: "named",
@@ -66,8 +64,6 @@ export default defineConfig({
           'element-plus': 'ElementPlus',
           '@element-plus/icons-vue': 'ElementPlusIconsVue',
           'lodash-es': 'LodashEs',
-          '@wangeditor/editor': 'WangeditorEditor',
-          '@wangeditor/editor-for-vue': 'WangeditorEditorForVue',
         },
         // 优化输出格式
         compact: true,

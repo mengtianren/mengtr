@@ -54,8 +54,6 @@ export default defineConfig({
         'lodash-es',
         'less',
         '@ant-design/icons-vue',
-        '@wangeditor/editor',
-        '@wangeditor/editor-for-vue',
       ],
       output: {
         exports: "named",
@@ -64,8 +62,6 @@ export default defineConfig({
           'ant-design-vue': 'AntDesignVue',
           '@ant-design/icons-vue': 'AntDesignIconsVue',
           'lodash-es': 'LodashEs',
-          '@wangeditor/editor': 'WangeditorEditor',
-          '@wangeditor/editor-for-vue': 'WangeditorEditorForVue',
         },
         // 优化输出格式
         compact: true,

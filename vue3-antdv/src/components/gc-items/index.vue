@@ -67,10 +67,6 @@
             :value="getValue(formData, [...fieldPath, field.name])"
             @update:value="e => setValue([...fieldPath, field.name], e)" v-bind="(field.config as TreeSelectProps)"
             :disabled="field.disabled || disabled" />
-          <EditorPage v-else-if="field.type.toLowerCase() === 'editor'"
-            :value="getValue(formData, [...fieldPath, field.name])"
-            @update:value="e => setValue([...fieldPath, field.name], e)" v-bind="(field.config || {})"
-            :disabled="field.disabled || disabled" />
           <component v-else-if="field.type.toLowerCase() === 'component' && (field as IComponentFormItem).component"
             :is="(field as IComponentFormItem).component" :value="getValue(formData, [...fieldPath, field.name])"
             v-model:formData="formData" @update:value="(e: any) => setValue([...fieldPath, field.name], e)"
@@ -104,7 +100,6 @@ import {
   Col as ACol
 } from 'ant-design-vue'
 import { cloneDeep } from 'lodash-es';
-import EditorPage from './editor/index.vue'
 
 import type { InputProps } from 'ant-design-vue/es/input'
 import type { SelectProps } from 'ant-design-vue/es/select'
