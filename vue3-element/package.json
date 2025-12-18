@@ -37,7 +37,7 @@
     "build": "vue-tsc -b && vite build",
     "patch": "pnpm version patch && pnpm build",
     "major": "pnpm version major && pnpm build",
-    "pub": "pnpm run patch && git add . && git commit -m \"@mengtr/vue3-element: 版本升级\" && npm publish --access public"
+    "pub": "pnpm run patch && git add . && git commit -m \"@mengtr/vue3-element: 版本升级\" && pnpm -r publish --access public"
   },
   "peerDependencies": {
     "@element-plus/icons-vue": "^2.3.2",
