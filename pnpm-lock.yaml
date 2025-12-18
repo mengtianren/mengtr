@@ -33,6 +33,9 @@ importers:
       lodash-es:
         specifier: ^4.17.0
         version: 4.17.22
+      unplugin-element-plus:
+        specifier: ^0.11.2
+        version: 0.11.2
       vue:
         specifier: ^3.5.0
         version: 3.5.25(typescript@5.8.3)
