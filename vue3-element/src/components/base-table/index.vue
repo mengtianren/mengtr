@@ -9,7 +9,7 @@
           <slot name="bodyCell" :column="{ ...column, dataIndex: column.property }" :record="row"
             :text="row[column.property]" :index="$index">
             <template v-if="item?.customRender">
-              {{ item.customRender({ text: row[column.property] || '', index: $index }) }}
+              {{ item.customRender({ text: row[column.property] || '', index: $index, record: row }) }}
             </template>
             <template v-else>
               {{ row[column.property] || '' }}
@@ -19,9 +19,10 @@
       </el-table-column>
     </el-table>
     <div class="gc-table-pagination">
-      <el-pagination v-if="pagination" v-model:current-page="pagination.current" :page-size="pagination.pageSize" style="justify-content: flex-end;"
-        size="default" layout="slot, prev, pager, next, sizes" :total="pagination.total"
-        :page-sizes="pagination.pageSizeOptions" @size-change="e => pagination.onChange(pagination.current, e)"
+      <el-pagination v-if="pagination" v-model:current-page="pagination.current" :page-size="pagination.pageSize"
+        style="justify-content: flex-end;" size="default" layout="slot, prev, pager, next, sizes"
+        :total="pagination.total" :page-sizes="pagination.pageSizeOptions"
+        @size-change="e => pagination.onChange(pagination.current, e)"
         @current-change="e => pagination.onChange(e, pagination.pageSize)">
         <template #default>总条数：{{ pagination.total || 0 }}</template>
       </el-pagination>
