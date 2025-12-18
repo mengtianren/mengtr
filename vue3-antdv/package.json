@@ -1,6 +1,6 @@
 {
   "name": "@mengtr/vue3-antdv",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "type": "module",
   "main": "lib/vue3-antdv.es.js",
   "module": "lib/vue3-antdv.es.js",
