@@ -1,6 +1,6 @@
 <template>
   <div class="gc-table">
-    <el-table :data="tableData" style="width: 100%" :rowKey="rowKey" table-layout="auto"
+    <el-table :data="tableData" style="width: 100%" :rowKey="rowKey" table-layout="fixed"
       :row-class-name="({ rowIndex }) => (rowIndex % 2 === 1 ? 'table-striped' : '')" :border="bordered">
       <el-table-column v-for="item in centerColumns" :key="item.dataIndex || item.key"
         :prop="item.dataIndex || item.key" :label="item.title" :width="item.width" :fixed="item?.fixed || false">
