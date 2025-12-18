@@ -7,7 +7,7 @@
         <template #default="{ row, column, $index }">
           <slot name="bodyCell" :column="column" :record="row" :text="row[column.property]" :index="$index">
             <template v-if="item?.customRender">
-              {{ item.customRender({ text: row[column.property] || '' }) }}
+              {{ item.customRender({ text: row[column.property] || '',index: $index }) }}
             </template>
            <template v-else>
              {{ row[column.property] || '' }}
