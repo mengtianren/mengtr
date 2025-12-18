@@ -18,7 +18,7 @@
     "pub:common": "pnpm --filter @mengtr/vue3-common pub",
     "build:antdv": "pnpm --filter @mengtr/vue3-antdv build",
     "pub:antdv": "pnpm --filter @mengtr/vue3-antdv pub ",
-     "build:element": "pnpm --filter @mengtr/vue3-element build",
+    "build:element": "pnpm --filter @mengtr/vue3-element build",
     "pub:element": "pnpm --filter @mengtr/vue3-element pub",
     "build:all": "pnpm build:common && pnpm build:antdv && pnpm build:element",
     "pub:all": "pnpm pub:common && pnpm pub:antdv && pnpm pub:element"
