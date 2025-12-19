@@ -187,6 +187,111 @@ export interface IProps<T = any, P = any> {
 }
 ```
 
+## FormItem 类型
+
+### TFormItemType
+
+表单字段类型枚举：
+
+```typescript
+export type TFormItemType =
+  | 'input'        // 输入框
+  | 'textarea'     // 文本域
+  | 'number'       // 数字输入框
+  | 'select'       // 下拉选择器
+  | 'treeselect'   // 树状选择器
+  | 'switch'       // 开关
+  | 'datepicker'   // 日期选择器
+  | 'rangepicker'  // 日期范围选择器
+  | 'component'   // 自定义组件
+  | 'object'       // 对象类型（嵌套表单）
+  | 'array'        // 数组类型（动态表单）
+```
+
+### IBaseFormItem
+
+基础表单字段接口：
+
+```typescript
+export interface IBaseFormItem {
+  type: TFormItemType     // 字段类型
+  name: string            // 字段名
+  label?: string          // 标签名
+  span?: number           // 占用列数
+  defaultValue?: any      // 默认值
+  disabled?: boolean      // 是否禁用
+
+  dependsOn?: {           // 依赖条件
+    path: string[]        // 依赖字段路径
+    value: any            // 依赖字段值
+  }
+
+  callback?: (formData: Recordable, field: IFormItem, oldValue?: any, newValue?: any) => void
+  config?: Recordable     // 额外配置
+}
+```
+
+### IFormItem
+
+表单字段联合类型：
+
+```typescript
+export type IFormItem =
+  | IInputFormItem        // 输入框
+  | ITextareaFormItem     // 文本域
+  | INumberFormItem       // 数字输入框
+  | ISelectFormItem       // 下拉选择器
+  | ISwitchFormItem       // 开关
+  | IDatePickerFormItem   // 日期选择器
+  | IRangePickerFormItem  // 日期范围选择器
+  | IComponentFormItem    // 自定义组件
+  | IObjectFormItem       // 对象类型（嵌套表单）
+  | IArrayFormItem        // 数组类型（动态表单）
+```
+
+## 搜索类型
+
+### TSearchType
+
+搜索字段类型枚举：
+
+```typescript
+export type TSearchType =
+  | 'number'       // 数字类型
+  | 'string'       // 字符串类型
+  | 'datapicker'   // 日期选择器
+  | 'rangepicker'  // 日期范围选择器
+  | 'select'       // 下拉选择器
+  | 'treeselect'   // 树状选择器
+```
+
+### TSearchOption
+
+搜索字段联合类型：
+
+```typescript
+export type TSearchOption =
+  | INumberSearchField       // 数字类型搜索字段
+  | IStringSearchField       // 字符串类型搜索字段
+  | IDataPickerSearchField   // 日期选择器搜索字段
+  | IRangePickerSearchField  // 日期范围选择器搜索字段
+  | ISelectSearchField       // 下拉选择器搜索字段
+```
+
+### ISearch
+
+搜索配置接口：
+
+```typescript
+export interface ISearch {
+  searchOptions: TSearchOption[]  // 搜索字段配置
+  enableExport?: boolean         // 是否启用导出
+  enableImport?: boolean         // 是否启用导入
+  enableCreate?: boolean         // 是否启用新增
+  span?: number                  // 搜索字段占用列数
+}
+```
+
 ## 注意事项
 
 1. 确保你的项目使用 Vue 3.5.0 或以上版本

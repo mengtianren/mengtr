@@ -5,7 +5,7 @@
         <!-- 数组类型 -->
         <template v-if="field.type === 'array'">
           <el-form-item :label="field.label || field.name" v-if="shouldShowField(field, formData)">
-            <el-button type="primary" @click="addArrayItem(fieldPath, field.name)">+ 添加</el-button>
+            <el-button type="primary" @click="addArrayItem(field,fieldPath, field.name)">+ 添加</el-button>
           </el-form-item>
 
 
@@ -34,41 +34,41 @@
             v-if="field.type && shouldShowField(field, formData)">
             <el-date-picker v-if="field.type.toLowerCase() === 'datepicker'"
               :modelValue="getValue(formData, [...fieldPath, field.name])" style="width:100%"
-              @update:modelValue="e => setValue([...fieldPath, field.name], e)" v-bind="(field.config as any)"
+              @update:modelValue="e => setValue(field, [...fieldPath, field.name], e)" v-bind="(field.config as any)"
               :disabled="field.disabled || disabled" />
             <el-date-picker v-else-if="field.type.toLowerCase() === 'rangepicker'"
               :modelValue="getValue(formData, [...fieldPath, field.name])" style="width:100%"
-              @update:modelValue="e => setValue([...fieldPath, field.name], e)" v-bind="(field.config || {})"
+              @update:modelValue="e => setValue(field,[...fieldPath, field.name], e)" v-bind="(field.config || {})"
               :disabled="field.disabled || disabled" />
             <el-switch v-else-if="field.type.toLowerCase() === 'switch'"
               :modelValue="getValue(formData, [...fieldPath, field.name])"
-              @update:modelValue="e => setValue([...fieldPath, field.name], e)" v-bind="(field.config || {})"
+              @update:modelValue="e => setValue(field,[...fieldPath, field.name], e)" v-bind="(field.config || {})"
               :disabled="field.disabled || disabled" />
             <el-select v-else-if="field.type.toLowerCase() === 'select'"
               :modelValue="getValue(formData, [...fieldPath, field.name])"
-              @update:modelValue="e => setValue([...fieldPath, field.name], e)" v-bind="(field.config || {})"
+              @update:modelValue="e => setValue(field,[...fieldPath, field.name], e)" v-bind="(field.config || {})"
               :disabled="field.disabled || disabled" />
             <el-input v-else-if="field.type.toLowerCase() === 'input'"
               :modelValue="getValue(formData, [...fieldPath, field.name])"
-              @update:modelValue="e => setValue([...fieldPath, field.name], e)" v-bind="(field.config || {})"
+              @update:modelValue="e => setValue(field,[...fieldPath, field.name], e)" v-bind="(field.config || {})"
               :disabled="field.disabled || disabled" />
             <el-input v-else-if="field.type.toLowerCase() === 'textarea'" type="textarea"
               :modelValue="getValue(formData, [...fieldPath, field.name])"
-              @update:modelValue="e => setValue([...fieldPath, field.name], e)" v-bind="(field.config || {})"
+              @update:modelValue="e => setValue(field,[...fieldPath, field.name], e)" v-bind="(field.config || {})"
               :disabled="field.disabled || disabled" />
             <el-input-number v-else-if="field.type.toLowerCase() === 'number'"
               :modelValue="getValue(formData, [...fieldPath, field.name])"
-              @update:modelValue="e => setValue([...fieldPath, field.name], e)" v-bind="(field.config || {})"
+              @update:modelValue="e => setValue(field,[...fieldPath, field.name], e)" v-bind="(field.config || {})"
               :disabled="field.disabled || disabled" />
             <el-tree-select v-else-if="field.type.toLowerCase() === 'treeselect'"
               :modelValue="getValue(formData, [...fieldPath, field.name])"
-              @update:modelValue="e => setValue([...fieldPath, field.name], e)" :data="field.config?.treeData || []"
+              @update:modelValue="e => setValue(field,[...fieldPath, field.name], e)" :data="field.config?.treeData || []"
               :props="field.config?.fieldNames || { label: 'label', value: 'value', children: 'children' }"
               :check-strictly="field.config?.showCheckedStrategy ? true : false" v-bind="(field.config || {})"
               :disabled="field.disabled || disabled" />
             <component v-else-if="field.type.toLowerCase() === 'component' && (field as IComponentFormItem).component"
               :is="(field as IComponentFormItem).component" :value="getValue(formData, [...fieldPath, field.name])"
-              v-model:formData="formData" @update:value="(e: any) => setValue([...fieldPath, field.name], e)"
+              v-model:formData="formData" @update:value="(e: any) => setValue(field,[...fieldPath, field.name], e)"
               v-bind="(field.config || {})" :disabled="field.disabled || disabled" />
 
 
@@ -82,13 +82,11 @@
 
 
 <script setup lang="ts">
-import { watch } from 'vue';
+import { computed } from 'vue';
 import { ElFormItem, ElDatePicker, ElSwitch, ElSelect, ElInput, ElInputNumber, ElTreeSelect, ElCard, ElButton, ElRow, ElCol } from 'element-plus'
 
-import { cloneDeep } from 'lodash-es';
 import type { IFormItem, IComponentFormItem } from '@mengtr/vue3-common/lib/types/types/table-page'
-
-
+import { useFormItems } from '@mengtr/vue3-common'
 
 
 defineOptions({ name: 'GcFormItem' })
@@ -101,110 +99,11 @@ const props = withDefaults(defineProps<{
   disabled: boolean
 }>(), { disabled: false })
 
-// 取值
-const getValue = (obj: any, keys: (string | number)[]): any => {
-  try {
-    return keys.reduce((acc, key) => acc?.[key], obj)
-  } catch {
-    return undefined
-  }
-}
-
-// 赋值
-const setValue = (keys: (string | number)[], value: any): void => {
-  keys.reduce((acc, key, index) => {
-    if (index === keys.length - 1) {
-      acc[key] = value
-    } else {
-      if (!(key in acc) || typeof acc[key] !== 'object') acc[key] = {}
-      return acc[key]
-    }
-    return acc
-  }, formData.value)
-}
-
-// 添加数组项
-const addArrayItem = (path: (string | number)[], name: string) => {
-  const fullPath = [...path, name]
-  const current = getValue(formData.value, fullPath)
-  const newItem = {}
-  if (Array.isArray(current)) {
-    current.push(newItem)
-  } else {
-    setValue(fullPath, [newItem])
-  }
-}
-
-// 判断字段是否显示
-const shouldShowField = (field: IFormItem, formData: { [key: string]: any }) => {
-  if (field.dependsOn) {
-    const dependentValue = getValue(formData, field.dependsOn.path);
-    if (typeof field.dependsOn.value === 'string' && typeof dependentValue === 'string') {
-      return dependentValue.toLowerCase() === field.dependsOn.value.toLowerCase() || dependentValue.toUpperCase() === field.dependsOn.value.toUpperCase();
-    } else {
-      return dependentValue === field.dependsOn.value
-    }
-
-
-  }
-  return true;
-}
-
-// 删除数组项
-const removeArrayItem = (path: (string | number)[], name: string, index: number) => {
-  const fullPath = [...path, name]
-  const current = getValue(formData.value, fullPath)
-  if (Array.isArray(current)) {
-    current.splice(index, 1)
-  }
-}
-
-// 检查并触发字段的watch回调
-const checkAndTriggerWatchCallbacks = (fields: IFormItem[], previousData: any = {}) => {
-  fields.forEach(field => {
-    // 检查当前字段是否配置了watch
-    if (field.watch && field.watch.key && field.watch.callback) {
-      const watchKeys = Array.isArray(field.watch.key) ? field.watch.key : [field.watch.key];
-
-      // 检查是否有任何一个被监听的字段值发生了变化
-      const hasChanged = watchKeys.some(key => {
-        const currentValue = getValue(formData.value, [key]);
-        const previousValue = getValue(previousData, [key]);
-        return currentValue !== previousValue;
-      });
-
-      // 如果有变化，触发回调
-      if (hasChanged) {
-        // 确保回调是一个函数
-        if (typeof field.watch.callback === 'function') {
-          // 传入当前表单数据和字段信息，方便在回调中操作
-          field.watch.callback({
-            formData: formData.value,
-            field,
-          });
-        }
-      }
-    }
-
-    // 递归处理嵌套的字段配置
-    if ((field.type === 'object' || field.type === 'array') && field.fields) {
-      checkAndTriggerWatchCallbacks(field.fields, previousData);
-    }
-  });
-};
-
-
-// 监听formData变化，触发watch回调
-let previousFormData = { ...formData.value };
-watch(
-  () => formData.value,
-  (newVal) => {
-    // 检查并触发所有配置了watch的字段回调
-    checkAndTriggerWatchCallbacks(props.fields, previousFormData);
-    // 更新之前的数据引用
-    previousFormData = cloneDeep(newVal);
-  },
-  { deep: true, immediate: true }
+// 使用useFormItems hook
+const { getValue, setValue, addArrayItem, removeArrayItem, shouldShowField } = useFormItems(
+  formData,
+  computed(() => props.fields),
+  computed(() => props.fieldPath),
 );
 
 </script>

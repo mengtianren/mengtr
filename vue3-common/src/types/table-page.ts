@@ -111,28 +111,28 @@ export interface ITableColumn {
 
 export type IAction =
   | {
-      key: 1 | 2 | 3
-      label: string
-      labelShow?: boolean
-      className?: string
-      local?: boolean
-      config?: {
-        key: string
-        value: string | number
-      }
+    key: 1 | 2 | 3
+    label: string
+    labelShow?: boolean
+    className?: string
+    local?: boolean
+    config?: {
+      key: string
+      value: string | number
     }
+  }
   | {
-      key: Exclude<number, 1 | 2 | 3>
-      label: string
-      labelShow?: boolean
-      className?: string
-      local?: boolean
-      config?: {
-        key: string
-        value: string | number
-      }
-      callback: (row: Recordable) => void
+    key: Exclude<number, 1 | 2 | 3>
+    label: string
+    labelShow?: boolean
+    className?: string
+    local?: boolean
+    config?: {
+      key: string
+      value: string | number
     }
+    callback: (row: Recordable) => void
+  }
 
 export interface ITable {
   className?: string
@@ -178,11 +178,7 @@ export interface IBaseFormItem {
     path: string[]
     value: any
   }
-
-  watch?: {
-    key: string[]
-    callback: (value: any) => void
-  },
+  callback?: (formData: Recordable, field: IFormItem, oldValue?: any, newValue?: any) => void
   config?: Recordable
 }
 
