@@ -1,6 +1,6 @@
 {
   "name": "@mengtr/vue3-element",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "type": "module",
   "main": "lib/vue3-element.es.js",
   "module": "lib/vue3-element.es.js",
