@@ -12,6 +12,8 @@
     "paths": {
       "@/*": ["src/*"],
       // "@mengtr/vue3-common": ["node_modules/@mengtr/vue3-common"]
+      "vue-types": ["node_modules/vue-types"],
+      "scroll-into-view-if-needed": ["node_modules/scroll-into-view-if-needed"]
     },
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,

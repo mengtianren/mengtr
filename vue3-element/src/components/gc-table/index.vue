@@ -27,9 +27,8 @@
         </template>
     </BaseTable>
     <template v-if="!isEmpty(modal) || !modal?.hide">
-        <el-dialog class="gc-modal" :width="modal?.config?.width || 1200" v-bind="modalConfig" :modelValue="open !== 0" :close-on-click-modal="false"
-        :close-on-press-escape="false" @close="onModalCancel"
-            destroy-on-close>
+        <el-dialog class="gc-modal" :width="modal?.config?.width || 1200" v-bind="modalConfig" :modelValue="open !== 0"
+            :close-on-click-modal="false" :close-on-press-escape="false" @close="onModalCancel" destroy-on-close>
             <GcForm v-model:formData="formData" :options="modal.form" ref="formRef" :disabled="open !== 1" />
             <template #footer v-if="open === 1">
                 <div class="gc-modal-footer">
@@ -57,7 +56,7 @@ import BaseTable from '@/components/base-table/index.vue'
 import GcForm from '@/components/gc-form/index.vue'
 import { buildInitialFormData } from '@mengtr/vue3-common'
 import type { IPageOptions, IAction } from '@mengtr/vue3-common/lib/types/types/table-page'
-import type { TreeData, GetData, ITableEvent } from '@mengtr/vue3-common/lib/types/types/table-type'
+import type { getPage, getTree, ITableEvent } from '@mengtr/vue3-common/lib/types/types/table-type'
 import type { IProps } from '@mengtr/vue3-common/lib/types/types/table-props'
 
 
@@ -78,7 +77,7 @@ const table = computed(() => props.options.table)
 
 const tableActions = computed(() => table.value?.actions || [])
 
-const tableOptions = computed<IProps<TreeData | GetData>>(() => ({
+const tableOptions = computed<IProps<getPage | getTree>>(() => ({
     ...props.options.table,
     data: API.value?.getPage as any
 }))
@@ -124,6 +123,34 @@ const onCreate = () => {
         getCallback()
     })
 }
+
+// 获取详情的通用方法
+const onGetDetail = async (type: 1 | 2, local: boolean, item: Record<string, any>) => {
+    if (local || !API.value.detailApi) {
+        open.value = type
+        formData.value = buildInitialFormData(modal.value.form.fields)
+        nextTick(() => {
+            formData.value = { ...cloneDeep(item), ...getInitData() }
+            getCallback()
+        })
+        return
+    } else if (API.value.detailApi && API.value.detailApi !== null) {
+        try {
+            const res = await API.value.detailApi(item.id)
+            console.log(res)
+            open.value = type
+            // 解决初始化后数据没同步进去问题
+            formData.value = buildInitialFormData(modal.value.form.fields)
+            nextTick(() => {
+                formData.value = { ...res, ...getInitData() }
+                getCallback()
+            })
+        } catch (error) {
+            console.log(error)
+        }
+    }
+}
+
 const onActionClick = (config: IAction, item: Record<string, any>) => {
     const { key, local = false } = config
     const callback = 'callback' in config ? config.callback : null;
@@ -131,48 +158,10 @@ const onActionClick = (config: IAction, item: Record<string, any>) => {
     const { id } = item
     switch (key) {
         case 1:
-            if (local) {
-                open.value = 1
-                formData.value = buildInitialFormData(modal.value.form.fields)
-                nextTick(() => {
-                    formData.value = { ...cloneDeep(item), ...getInitData() }
-                    getCallback()
-                })
-                return
-            }
-
-            console.log('编辑')
-            API.value.detailApi(id).then((res) => {
-                console.log(res)
-                open.value = 1
-                // 解决初始化后数据没同步进去问题
-                formData.value = buildInitialFormData(modal.value.form.fields)
-                nextTick(() => {
-                    formData.value = { ...res, ...getInitData() }
-                    getCallback()
-                })
-            })
+            onGetDetail(1, local, item)
             break
         case 2:
-            if (local) {
-                open.value = 2
-                formData.value = buildInitialFormData(modal.value.form.fields)
-                nextTick(() => {
-                    formData.value = { ...cloneDeep(item), ...getInitData() }
-                    getCallback()
-                })
-                return
-            }
-
-
-            API.value.detailApi(id).then((res) => {
-                open.value = 2
-                formData.value = buildInitialFormData(modal.value.form.fields)
-                nextTick(() => {
-                    formData.value = { ...res, ...getInitData() }
-                    getCallback()
-                })
-            })
+            onGetDetail(2, local, item)
             console.log('查看')
             break
         case 3:
@@ -181,11 +170,12 @@ const onActionClick = (config: IAction, item: Record<string, any>) => {
                     confirmButtonText: '确认',
                     cancelButtonText: '取消',
                     type: 'warning',
-                }).then(() => {
-                    return API.value.delApi(id).then(() => {
+                }).then(async () => {
+                    if (API.value.delApi && API.value.delApi !== null) {
+                        await API.value.delApi(id)
                         ElMessage.success('删除成功')
                         emits('searchOnSearch')
-                    })
+                    }
                 })
 
             console.log('删除')
@@ -203,8 +193,8 @@ const onModalOk = async () => {
         try {
             await formRef.value.validateFields()
             console.log(formData)
-            if (formData.value.id) await API.value.putApi(formData.value)
-            if (!formData.value.id) await API.value.postApi(formData.value)
+            if (formData.value.id && API.value.putApi && API.value.putApi !== null) await API.value.putApi(formData.value)
+            if (!formData.value.id && API.value.postApi && API.value.postApi !== null) await API.value.postApi(formData.value)
             await formRef.value.resetFields()
             open.value = 0
             emits('searchOnSearch')

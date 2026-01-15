@@ -47,7 +47,7 @@
               <el-button v-if="enableCreate" type="primary" class="create" @click="onCreate">新增</el-button>
               <el-button v-if="enableExport" type="primary" @click="onExport()">导出</el-button>
               <el-button v-if="enableImport" type="primary" @click="onImport()">导入</el-button>
-              <slot name="button"></slot>
+              <slot name="button" :param="queryParam"></slot>
             </el-space>
           </span>
         </el-col>
@@ -60,15 +60,12 @@
 import { ref, computed, watchEffect, unref } from 'vue'
 import { ElTreeSelect, ElButton, ElForm, ElFormItem, ElRow, ElCol, ElInputNumber, ElInput, ElDatePicker, ElSelect, ElSpace } from 'element-plus'
 import { isArray } from 'lodash-es'
-import type { TSearchOption, IRangePickerSearchField, TDatePicker, ISearch } from "@mengtr/vue3-common/lib/types/types/table-page"
+import type { TSearchOption, IRangePickerSearchField, TDatePicker, ISearch, IQueryParam } from "@mengtr/vue3-common/lib/types/types/table-page"
 
 defineOptions({
   name: 'GcSearch',
 })
 
-interface IQueryParam {
-  [key: string]: any
-}
 type NTDatePicker = TDatePicker | "hourrange" | "daterange" | "monthrange" | "yearrange" | 'datetime' | 'datetimerange'
 
 

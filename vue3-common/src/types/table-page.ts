@@ -1,5 +1,7 @@
-import type { Param, GetData } from '@/types/table-type'
-
+import type { Param, getPage, Records } from '@/types/table-type'
+export interface IQueryParam {
+  [key: string]: any
+}
 /* =========================
  * 基础公共类型
  * ========================= */
@@ -266,12 +268,12 @@ export interface IModal {
  * API & Page
  * ========================= */
 
-export interface IPAI {
-  getPage: GetData<any>
-  detailApi: (id: number) => Promise<Recordable>
-  delApi: (id: number) => Promise<any>
-  putApi: (data: any) => Promise<any>
-  postApi: (data: any) => Promise<any>
+export interface IPAI<T = Records> {
+  getPage: getPage<T>
+  detailApi?: (id: number) => Promise<{ [key: string]: any }> | null
+  delApi?: (id: number) => Promise<any> | null
+  putApi?: (data: any) => Promise<any> | null
+  postApi?: (data: any) => Promise<any> | null
 }
 
 export interface IBasePageOptions {
@@ -280,8 +282,8 @@ export interface IBasePageOptions {
   modal: IModal
 }
 
-export interface IPageOptions extends IBasePageOptions {
-  API: IPAI
+export interface IPageOptions<T = Records> extends IBasePageOptions {
+  API: IPAI<T>
 }
 
 /* =========================

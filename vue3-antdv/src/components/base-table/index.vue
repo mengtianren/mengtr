@@ -18,15 +18,15 @@
 import { unref,computed } from 'vue'
 import { useTable,useTreeTable } from '@mengtr/vue3-common'
 import type { IProps } from '@mengtr/vue3-common/lib/types/types/table-props'
-import type { GetData, TreeData } from '@mengtr/vue3-common/lib/types/types/table-type'
+import type { getPage, getTree } from '@mengtr/vue3-common/lib/types/types/table-type'
 import { Table as ATable } from 'ant-design-vue'
 import { ColumnProps } from "ant-design-vue/es/table";
 
 defineOptions({
   name: "BaseTable"
 })
-const props = withDefaults(defineProps<{ options: IProps<GetData | TreeData>, type: 1 | 2 }>(), {
-  options: () => ({}) as IProps<GetData | TreeData>,
+const props = withDefaults(defineProps<{ options: IProps<getPage | getTree>, type: 1 | 2 }>(), {
+  options: () => ({}) as IProps<getPage | getTree>,
   type: 1
 })
 
@@ -65,12 +65,12 @@ const centerColumns = computed<ColumnProps<any>[]>(() => columns.value.map((s) =
 const useNewtable = () => {
   if (props.type === 1) {
     return useTable(
-    props.options.data as GetData,
+    props.options.data as getPage,
     unref(init),
     unref(initParam))
   }
   return useTreeTable(
-    props.options.data as TreeData,
+    props.options.data as getTree,
     unref(init),
     unref(initParam))
 }

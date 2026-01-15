@@ -21,7 +21,7 @@
     "build:element": "pnpm --filter @mengtr/vue3-element build",
     "pub:element": "pnpm --filter @mengtr/vue3-element pub",
     "build:all": "pnpm build:common && pnpm build:antdv && pnpm build:element",
-    "pub:all": "pnpm pub:common && pnpm pub:antdv && pnpm pub:element"
+    "pub:all": "git add . && git commit -m \"@mengtr 版本升级\" && pnpm pub:common && pnpm pub:antdv && pnpm pub:element"
   },
   "dependencies": {
     "@ant-design/icons-vue": "^7.0.1",

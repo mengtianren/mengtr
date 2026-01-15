@@ -10,7 +10,10 @@ export default defineConfig({
     outDir: 'lib/types',
     compilerOptions: {
       skipLibCheck: true,
-    }
+      declarationMap: false,
+    },
+    rollupTypes: true,
+    copyDtsFiles: false,
   }),
   ],
   resolve: {

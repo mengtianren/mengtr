@@ -1,7 +1,7 @@
 import { reactive, onMounted, toRefs, inject, unref,  } from 'vue'
 import { isArray, isString, isNumber } from 'lodash-es'
 
-import type { TreeData, ChildState, Param } from '@/types/table-type'
+import type { getTree, ChildState, Param } from '@/types/table-type'
 /**
  *
  * @param getData 获取列表接口
@@ -10,7 +10,7 @@ import type { TreeData, ChildState, Param } from '@/types/table-type'
  *
  * }
  */
-export const useTable = (getData: TreeData, init = true, param: Param = null) => {
+export const useTable = (getData: getTree, init = true, param: Param = null) => {
   /** 搜索项目 */
 
   const callBack = inject('callBack', (data: any[]) => { console.log(data) })

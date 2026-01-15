@@ -11,7 +11,7 @@ import GForm from '@/components/gc-form/index.vue';
 import BaseTable from '@/components/base-table/index.vue';
 // 即将废弃 不再导出
 import GFormItem from '@/components/gc-items/index.vue';
-
+export type * from '@mengtr/vue3-common/lib/types/index'
 
 /**
  * 分页表格构建 useTable

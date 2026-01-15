@@ -42,7 +42,7 @@
                 @click="onCreate">新增</a-button>
               <a-button v-if="enableExport" type="primary" @click="onExport()">导出</a-button>
               <a-button v-if="enableImport" type="primary" @click="onImport()">导入</a-button>
-              <slot name="button"></slot>
+              <slot name="button" :param="queryParam" ></slot>
             </a-space>
           </span>
         </a-col>
@@ -68,16 +68,14 @@ import {
 import { SearchOutlined, PlusOutlined, RedoOutlined } from '@ant-design/icons-vue';
 import { isArray } from 'lodash-es'
 import type { PickerMode } from 'ant-design-vue/es/vc-picker/interface'
-import type { TSearchOption, IRangePickerSearchField, TDatePicker, ISearch } from "@mengtr/vue3-common/lib/types/types/table-page"
+import type { TSearchOption, IRangePickerSearchField, TDatePicker, ISearch,IQueryParam } from "@mengtr/vue3-common/lib/types/types/table-page"
 //  '../../types/table-page'
 
 defineOptions({
   name: 'GcSearch',
 })
 
-interface IQueryParam {
-  [key: string]: any
-}
+
 
 
 const SHOW_PARENT = ATreeSelect.SHOW_PARENT

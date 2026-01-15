@@ -1,6 +1,6 @@
 import { reactive, onMounted, inject, unref, toRefs } from 'vue'
 import { isString, isNumber } from 'lodash-es'
-import type { GetData, Param, TableState, IUseTableRes } from '@/types/table-type'
+import type { getPage, Param, TableState, IUseTableRes } from '@/types/table-type'
 
 
 interface IPageKey {
@@ -37,7 +37,7 @@ export const setTablePageKey = (key: IPageKey) => {
 
 
 
-export const useTable = (getData: GetData, init: boolean = true, param: Param, pageKey = tableKey): IUseTableRes => {
+export const useTable = (getData: getPage, init: boolean = true, param: Param, pageKey = tableKey): IUseTableRes => {
   /** 搜索项目 */
   const callBack = inject('callBack', (data: any[]) => { console.log(data) })
   const state = reactive<TableState>({

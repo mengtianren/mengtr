@@ -99,7 +99,6 @@ const { tableData, onSearch, onReset } = useTreeTable(
   true, // 是否初始化加载
   { parentId: 0 } // 初始参数
 )
-
 ```
 
 ### 2. @mengtr/vue3-antdv
@@ -512,7 +511,6 @@ export interface IBaseFormItem {
     value: any            // 依赖字段值
   }
 
-  callback?: (formData: Recordable, field: IFormItem, oldValue?: any, newValue?: any) => void  // 字段变化回调
   watch?: {              // 监听配置
     key: string[]        // 监听字段路径
     callback: (value: any) => void  // 监听回调
