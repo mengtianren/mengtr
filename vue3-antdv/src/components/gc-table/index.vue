@@ -153,6 +153,7 @@ const onActionClick = (config: IAction, item: Record<string, any>) => {
             break
         case 2:
             onGetDetail(2, local, item)
+            break
         case 3:
             AModal.confirm({
                 title: '确定删除吗？',
