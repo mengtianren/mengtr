@@ -1,6 +1,5 @@
 <template>
-  <!--  <a-card>-->
-  <div class="gc-search">
+    <div class="gc-search">
     <el-form :colon="false">
       <el-row :gutter="24">
         <el-col v-for="(propValue, index) in searchOptions" :key="index" :md="propValue.span || optionsSpan || 6"
@@ -20,11 +19,6 @@
               :show-time="getShowTime(getPickerProp(propValue))" :format="getFormat(getPickerProp(propValue))"
               :value-format="getFormat(getPickerProp(propValue))" style="width: 100%" :range-separator="'至'"
               :start-placeholder="'开始时间'" :end-placeholder="'结束时间'" />
-
-            <!-- <el-date-picker v-else-if="propValue.type.toLowerCase() === 'rangepicker'"
-              v-model:modelValue="queryParam[propValue.name]" :type="getPicker(getPickerProp(propValue))"
-              :show-time="getShowTime(getPickerProp(propValue))" :format="getFormat(getPickerProp(propValue))"
-              :value-format="getFormat(getPickerProp(propValue))" style="width: 100%" /> -->
             <el-select v-else-if="propValue.type.toLowerCase() === 'select'"
               v-model:modelValue="queryParam[propValue.name]" :placeholder="'请选择' + propValue.label"
               :options="getOptionsProps(propValue)" />
@@ -54,7 +48,6 @@
       </el-row>
     </el-form>
   </div>
-  <!--    </a-card>-->
 </template>
 <script setup lang="ts">
 import { ref, computed, watchEffect, unref } from 'vue'
@@ -158,21 +151,11 @@ const getPicker = (picker?: NTDatePicker): Exclude<NTDatePicker, "hour" | "hourr
   if (picker === 'hour' || !picker) {
     return 'datetime'
   } else if (picker === 'hourrange') {
-    console.log(picker)
     return 'datetimerange'
   } else {
     return picker
   }
 }
-
-const getRangePicker = (picker?: TDatePicker): TDatePicker => {
-  if (picker === 'hour' || !picker) {
-    return 'date'
-  } else {
-    return picker
-  }
-}
-
 
 /**是否显示时间 */
 const getShowTime = (picker: string | undefined) => {
@@ -194,7 +177,7 @@ const getFormat = (picker: string | undefined) => {
       return 'YYYY-MM'
     case 'monthrange':
       return 'YYYY-MM'
-    case 'yearr':
+    case 'year':
       return 'YYYY'
     case 'yearrange':
       return 'YYYY'
@@ -216,17 +199,14 @@ const onReset = (obj = {}) => {
 }
 /**搜索 默认type= true 会清空所有搜索条件   false 为不清空 */
 const onSearch = (type = true) => {
-  console.log(getQueryParam.value)
   emits('search', getQueryParam.value, type)
 }
 /**导出 */
 const onExport = () => {
-  console.log('导出')
   emits('export', getQueryParam.value)
 }
 /**导入 */
 const onImport = () => {
-  console.log('导入')
   emits('import', getQueryParam.value)
 }
 
@@ -261,11 +241,3 @@ defineExpose({
   onExport
 })
 </script>
-
-<script lang="ts">
-export default {
-  name: 'BaseSearch'
-}
-</script>
-
-<style lang="less" scoped></style>

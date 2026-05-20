@@ -13,7 +13,7 @@ import type { getTree, ChildState, Param } from '@/types/table-type'
 export const useTable = (getData: getTree, init = true, param: Param = null) => {
   /** 搜索项目 */
 
-  const callBack = inject('callBack', (data: any[]) => { console.log(data) })
+  const callBack = inject('callBack', (data: any[]) => {})
 
   const state = reactive<ChildState>({
     search: {},
@@ -35,7 +35,6 @@ export const useTable = (getData: getTree, init = true, param: Param = null) => 
     // const params = state.search
     if (getData) {
       getData(params).then((res) => {
-        console.log(isArray(res), '!!!!')
         if (!res) {
           state.tableData = []
         } else if (isArray(res)) {

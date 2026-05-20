@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
 
-import MengtrUi, { setTablePageKey } from '@mengtr/vue3-antdv'
-import '@mengtr/vue3-antdv/style'
+import GUI, { setTablePageKey } from '@mengtr/vue3-element'
+import '@mengtr/vue3-element/style'
 
 import App from './App.vue'
 
@@ -15,5 +15,5 @@ setTablePageKey({
 
 
 let app = createApp(App)
-  .use(MengtrUi)
+  .use(GUI)
   .mount('#app')

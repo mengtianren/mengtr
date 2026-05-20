@@ -1,6 +1,5 @@
 <template>
-  <!--  <a-card>-->
-  <div class="gc-search">
+    <div class="gc-search">
     <a-form :colon="false">
       <a-row :gutter="24">
         <a-col v-for="(propValue, index) in searchOptions" :key="index" :md="propValue.span ||  optionsSpan || 6" :sm="24">
@@ -49,7 +48,6 @@
       </a-row>
     </a-form>
   </div>
-  <!--    </a-card>-->
 </template>
 <script setup lang="ts">
 import { ref, computed, watchEffect, h } from 'vue'
@@ -204,17 +202,14 @@ const onReset = (obj = {}) => {
 }
 /**搜索 默认type= true 会清空所有搜索条件   false 为不清空 */
 const onSearch = (type = true) => {
-  console.log(getQueryParam.value)
   emits('search', getQueryParam.value, type)
 }
 /**导出 */
 const onExport = () => {
-  console.log('导出')
   emits('export', getQueryParam.value)
 }
 /**导入 */
 const onImport = () => {
-  console.log('导入')
   emits('import', getQueryParam.value)
 }
 
@@ -249,11 +244,3 @@ defineExpose({
   onExport
 })
 </script>
-
-<script lang="ts">
-export default {
-  name: 'BaseSearch'
-}
-</script>
-
-<style lang="less" scoped></style>

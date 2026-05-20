@@ -15,7 +15,7 @@
                 <GcFormItem :disabled="disabled" v-if="shouldShowField(subField || field, formData)"
                   v-model:value="formData" :fields="[subField]" :fieldPath="[...fieldPath, field.name, `${index}`]" />
               </template>
-              <el-button danger type="danger" @click="removeArrayItem(fieldPath, field.name, index)">删除</el-button>
+              <el-button type="primary" danger @click="removeArrayItem(fieldPath, field.name, index)">删除</el-button>
             </el-card>
           </template>
         </template>
@@ -107,5 +107,3 @@ const { getValue, setValue, addArrayItem, removeArrayItem, shouldShowField } = u
 );
 
 </script>
-
-<style scoped lang="less"></style>

@@ -22,7 +22,6 @@ export const setTablePageKey = (key: IPageKey) => {
   tableKey.size = key.size || tableKey.size
   tableKey.records = key.records || tableKey.records
   tableKey.total = key.total || tableKey.total
-  console.warn('tableKey', key)
 }
 
 /**
@@ -39,7 +38,7 @@ export const setTablePageKey = (key: IPageKey) => {
 
 export const useTable = (getData: getPage, init: boolean = true, param: Param, pageKey = tableKey): IUseTableRes => {
   /** 搜索项目 */
-  const callBack = inject('callBack', (data: any[]) => { console.log(data) })
+  const callBack = inject('callBack', (data: any[]) => {})
   const state = reactive<TableState>({
     search: {},
     tableData: [],

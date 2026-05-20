@@ -106,7 +106,6 @@ const getCallback = () => {
 
 
 const onCreate = () => {
-    console.log('新增', buildInitialFormData(modal.value.form.fields, true))
     open.value = 1
     formData.value = buildInitialFormData(modal.value.form.fields, true)
     nextTick(() => {
@@ -128,7 +127,6 @@ const onGetDetail = async (type: 1 | 2, local: boolean, item: Record<string, any
     } else if (API.value.detailApi && API.value.detailApi !== null) {
         try {
             const res = await API.value.detailApi(item.id)
-            console.log(res)
             open.value = type
             // 解决初始化后数据没同步进去问题
             formData.value = buildInitialFormData(modal.value.form.fields)
@@ -137,7 +135,7 @@ const onGetDetail = async (type: 1 | 2, local: boolean, item: Record<string, any
                 getCallback()
             })
         } catch (error) {
-            console.log(error)
+            console.error(error)
         }
     }
 }
@@ -167,8 +165,6 @@ const onActionClick = (config: IAction, item: Record<string, any>) => {
                 },
                 onCancel: () => { }
             })
-
-            console.log('删除')
             break
         default:
             if (callback && typeof callback === 'function') {
@@ -182,15 +178,14 @@ const onModalOk = async () => {
     if (open.value === 1 && formRef.value) {
         try {
             await formRef.value.validateFields()
-            console.log(formData)
-            if (formData.value.id && API.value.putApi && API.value.putApi !== null) await API.value.putApi(formData.value)
-            if (!formData.value.id && API.value.postApi && API.value.postApi !== null) await API.value.postApi(formData.value)
+            if (formData.value.id !== undefined && formData.value.id !== null && API.value.putApi && API.value.putApi !== null) await API.value.putApi(formData.value)
+            if ((formData.value.id === undefined || formData.value.id === null) && API.value.postApi && API.value.postApi !== null) await API.value.postApi(formData.value)
             await formRef.value.resetFields()
             open.value = 0
             emits('searchOnSearch')
             message.success('操作成功')
         } catch (error) {
-            console.log(error)
+            console.error(error)
         }
     } else {
         open.value = 0
@@ -199,7 +194,6 @@ const onModalOk = async () => {
 
 const onModalCancel = () => {
     if (formRef.value) {
-        console.log(1)
         formRef.value.resetFields()
     }
     open.value = 0

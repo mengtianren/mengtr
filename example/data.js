@@ -1,3 +1,4 @@
+import { computed } from 'vue'
 import { getPage, getDetail, delList, postList, putList } from '@/api/admin/system/dict'
 export const useData = () => {
 

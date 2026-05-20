@@ -70,7 +70,7 @@ const onModalOk = async () => {
             await formRef.value.validateFields()
             emits('ok', formData.value)
         } catch (error) {
-            console.log(error)
+            console.error(error)
         }
     }
 
@@ -96,5 +96,3 @@ watch(() => open.value, (newVal) => {
 })
 
 </script>
-
-<style scoped lang="less"></style>

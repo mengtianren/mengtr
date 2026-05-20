@@ -1,84 +1,65 @@
 # @mengtr Components Library
 
-这是一个基于pnpm工作空间的Vue 3组件库，包含三个主要的子包：
-- `@mengtr/vue3-antdv`：基于Ant Design Vue的组件库
-- `@mengtr/vue3-element`：基于Element Plus的组件库
-- `@mengtr/vue3-common`：公共的工具库和类型定义
+这是一个基于 pnpm 工作空间的 Vue 3 业务组件库，提供配置驱动的 CRUD 页面组件，支持 Ant Design Vue 和 Element Plus 两套 UI 库。
 
-**npm地址：https://www.npmjs.com/search?q=%40mengtr**
+- `@mengtr/vue3-antdv`：基于 Ant Design Vue
+- `@mengtr/vue3-element`：基于 Element Plus
+- `@mengtr/vue3-common`：公共逻辑、Hooks、类型定义
 
+**npm：https://www.npmjs.com/search?q=%40mengtr**
+
+---
 
 ## 项目结构
 
 ```
 mengtr/
-├── vue3-antdv/           # 基于Ant Design Vue的组件库
-│   ├── src/
-│   │   ├── components/   # 组件目录
-│   │   ├── types/        # 类型定义
-│   │   └── index.ts      # 入口文件
-│   ├── package.json
-│   └── vite.config.ts
-├── vue3-element/         # 基于Element Plus的组件库
-│   ├── src/
-│   │   ├── components/   # 组件目录
-│   │   ├── types/        # 类型定义
-│   │   └── index.ts      # 入口文件
-│   ├── package.json
-│   └── vite.config.ts
-├── vue3-common/          # 公共工具库和类型定义
-│   ├── src/
-│   │   ├── hooks/        # Vue 3 Hooks
-│   │   ├── types/        # 类型定义
-│   │   └── index.ts      # 入口文件
-│   ├── package.json
-│   └── vite.config.ts
-├── package.json          # 根项目配置
-└── pnpm-workspace.yaml   # pnpm工作空间配置
+├── vue3-antdv/           # Ant Design Vue 组件
+│   └── src/components/
+│       ├── gc-page/      # GPage - 完整 CRUD 页面
+│       ├── gc-search/    # GSearch - 搜索工具栏
+│       ├── gc-table/     # GTable - 表格 + 弹窗
+│       ├── gc-modal/     # GModal - 弹窗
+│       ├── gc-form/      # GForm - 表单
+│       ├── gc-items/     # GFormItem - 表单字段渲染
+│       └── base-table/   # BaseTable - 基础表格
+├── vue3-element/         # Element Plus 组件（同上结构）
+├── vue3-common/          # 共享 Hooks、类型定义、工具函数
+│   └── src/
+│       ├── hooks/        # useTable, useTreeTable, useFormItems
+│       ├── types/        # 完整的 TypeScript 类型定义
+│       └── utils/        # buildInitialFormData
+├── example/              # 使用示例
+├── package.json          # 根工作空间配置
+├── pnpm-workspace.yaml   # pnpm workspace 声明
+└── CHANGELOG.md
 ```
 
 ## 安装
-
-### 安装整个组件库
 
 ```bash
 pnpm add @mengtr/vue3-antdv @mengtr/vue3-element @mengtr/vue3-common
 ```
 
-### 单独安装某个子包
+或单独安装：
 
 ```bash
-# 安装基于Ant Design Vue的组件库
-pnpm add @mengtr/vue3-antdv
-
-# 安装基于Element Plus的组件库
-pnpm add @mengtr/vue3-element
-
-# 安装公共工具库
-pnpm add @mengtr/vue3-common
+pnpm add @mengtr/vue3-antdv     # Ant Design Vue 版
+pnpm add @mengtr/vue3-element   # Element Plus 版
+pnpm add @mengtr/vue3-common    # 仅使用 Hooks/类型（无 UI）
 ```
 
-## 包说明
+## 使用方式
 
-### 1. @mengtr/vue3-common
-
-公共的工具库和类型定义，被其他两个包依赖。
-
-#### 导出方法
-
-| 方法名 | 描述 | 参数 | 返回值 |
-| --- | --- | --- | --- |
-| `useTable` | 分页表格数据管理钩子 | - `getData`: 数据获取函数<br>- `init`: 是否初始化加载<br>- `param`: 初始参数<br>- `pageKey`: 分页参数映射 | `{ tableData, pagination, onSearch, onReset, onSetParam, search }` |
-| `useTreeTable` | 树状表格数据管理钩子 | - `getData`: 数据获取函数<br>- `init`: 是否初始化加载<br>- `param`: 初始参数 | `{ tableData, onSearch, onReset, onSetParam, search }` |
-| `setTablePageKey` | 设置分页参数映射 | - `key`: 包含page、size、records、total的对象 | `void` |
-| `buildInitialFormData` | 构建表单初始数据 | - `fields`: 表单字段配置<br>- `data`: 初始数据 | `object` |
-
-#### 使用示例
+### 全局注册
 
 ```typescript
-import { useTable, setTablePageKey } from '@mengtr/vue3-common'
+import { createApp } from 'vue'
+import MengtrUi from '@mengtr/vue3-antdv'
+// import MengtrUi from '@mengtr/vue3-element'
+import { setTablePageKey } from '@mengtr/vue3-antdv'
 
-// 设置分页参数映射
+// 设置后端分页字段名映射（可选，默认 page/pageSize/records/total）
 setTablePageKey({
   page: 'page',
   size: 'pageSize',
@@ -86,509 +67,569 @@ setTablePageKey({
   total: 'total'
 })
 
-// 使用useTable钩子
-const { tableData, pagination, onSearch, onReset } = useTable(
-  (params) => axios.get('/api/list', { params }), // 数据获取函数
-  true, // 是否初始化加载
-  { status: 1 } // 初始参数
-)
-
-// 使用useTreeTable钩子
-const { tableData, onSearch, onReset } = useTreeTable(
-  (params) => axios.get('/api/tree', { params }), // 数据获取函数
-  true, // 是否初始化加载
-  { parentId: 0 } // 初始参数
-)
+const app = createApp(App)
+app.use(MengtrUi)
+app.mount('#app')
 ```
 
-### 2. @mengtr/vue3-antdv
-
-基于Ant Design Vue的组件库，提供了一系列常用的业务组件。
-
-#### 导出组件
-
-| 组件名 | 别名 | 描述 |
-| --- | --- | --- |
-| `GPage` | `GTablePage` | 完整的增删改查页面组件 |
-| `GSearch` | - | 搜索功能组件 |
-| `GTable` | - | 表格+弹窗组件 |
-| `GModal` | - | 模态框组件 |
-| `GForm` | - | 表单组件 |
-| `GFormItem` | - | 表单字段组件（即将废弃） |
-| `BaseTable` | - | 基础表格组件 |
-
-#### 导出方法
-
-| 方法名 | 描述 | 来源 |
-| --- | --- | --- |
-| `useTable` | 分页表格数据管理钩子 | 从`@mengtr/vue3-common`导入 |
-| `useTreeTable` | 树状表格数据管理钩子 | 从`@mengtr/vue3-common`导入 |
-| `setTablePageKey` | 设置分页参数映射 | 从`@mengtr/vue3-common`导入 |
-
-#### 使用示例
+### 按需导入
 
 ```vue
-<template>
-  <!-- GPage 完整增删改查页面 -->
-  <GPage :options="pageOptions" @export="onExport" @import="onImport" />
-  
-  <!-- GSearch 搜索功能组件 -->
-  <GSearch :options="searchOptions" @search="onSearch" @reset="onReset" />
-  
-  <!-- GTable 表格+弹窗组件 -->
-  <GTable :options="tableOptions" />
-  
-  <!-- BaseTable 基础表格组件 -->
-  <BaseTable :type="1" ref="tableRef" :options="baseTableOptions">
-    <template #bodyCell="{ column, record, text, index }">
-      <!-- 自定义单元格内容 -->
-      <span v-if="column.dataIndex === 'status'">
-        <a-tag :color="record.status === 1 ? 'green' : 'red'">
-          {{ record.status === 1 ? '启用' : '禁用' }}
-        </a-tag>
-      </span>
-    </template>
-  </BaseTable>
-</template>
-
 <script setup lang="ts">
 import { GPage, GSearch, GTable, BaseTable, useTable } from '@mengtr/vue3-antdv'
-import axios from 'axios'
-
-// GPage 配置示例
-const pageOptions = {
-  search: {
-    searchOptions: [
-      { type: 'string', label: '名称', name: 'name', span: 6 },
-      { type: 'select', label: '状态', name: 'status', options: [{ value: 1, label: '启用' }, { value: 0, label: '禁用' }] }
-    ],
-    enableCreate: true,
-    enableExport: true,
-    enableImport: true
-  },
-  table: {
-    columns: [
-      { title: '名称', dataIndex: 'name', key: 'name' },
-      { title: '状态', dataIndex: 'status', key: 'status' },
-      { title: '操作', dataIndex: 'action', key: 'action' }
-    ],
-    actions: [
-      { label: '编辑', key: 1 },
-      { label: '详情', key: 2 },
-      { label: '删除', key: 3 },
-      { label: '自定义', key: 4, callback: (record) => console.log('自定义操作', record) }
-    ],
-    initParam: {}
-  },
-  modal: {
-    config: { title: '编辑' },
-    form: {
-      config: {},
-      fields: [
-        { type: 'input', label: '名称', name: 'name', config: { placeholder: '请输入名称' } }
-      ]
-    }
-  },
-  API: {
-    getPage: (params) => axios.get('/api/list', { params }),
-    detailApi: (id) => axios.get(`/api/detail/${id}`),
-    delApi: (id) => axios.delete(`/api/delete/${id}`),
-    putApi: (data) => axios.put('/api/update', data),
-    postApi: (data) => axios.post('/api/create', data)
-  }
-}
-
-// GSearch 配置示例
-const searchOptions = {
-  searchOptions: [
-    { type: 'string', label: '名称', name: 'name' },
-    { type: 'select', label: '状态', name: 'status', options: [{ value: 1, label: '启用' }, { value: 0, label: '禁用' }] }
-  ],
-  enableCreate: true,
-  enableExport: true
-}
-
-// GTable 配置示例
-const tableOptions = {
-  columns: [
-    { title: '名称', dataIndex: 'name', key: 'name' },
-    { title: '状态', dataIndex: 'status', key: 'status' },
-    { title: '操作', dataIndex: 'action', key: 'action' }
-  ],
-  actions: [
-    { label: '编辑', key: 1 },
-    { label: '详情', key: 2 },
-    { label: '删除', key: 3 }
-  ],
-  data: (params) => axios.get('/api/list', { params })
-}
-
-// BaseTable 配置示例
-const baseTableOptions = {
-  columns: [
-    { title: '名称', dataIndex: 'name', key: 'name' },
-    { title: '状态', dataIndex: 'status', key: 'status' },
-    { title: '操作', dataIndex: 'action', key: 'action' }
-  ],
-  data: (params) => axios.get('/api/list', { params }),
-  initParam: {},
-  rowKey: 'id'
-}
-
-// 事件处理
-const onExport = () => { /* 导出逻辑 */ }
-const onImport = () => { /* 导入逻辑 */ }
-const onSearch = (data) => { /* 搜索逻辑 */ }
-const onReset = () => { /* 重置逻辑 */ }
 </script>
 ```
 
-### 3. @mengtr/vue3-element
+### 注意事项
 
-基于Element Plus的组件库，提供了与`@mengtr/vue3-antdv`相同的组件API，但使用Element Plus实现。
+- 使用 `@mengtr/vue3-antdv` 需安装 `ant-design-vue` 和 `@ant-design/icons-vue`，并自行引入 antdv 的 CSS
+- 使用 `@mengtr/vue3-element` 需安装 `element-plus` 和 `@element-plus/icons-vue`
+- 要求 Vue 3.5.0+
+- `GFormItem` 组件即将废弃，建议使用 `GForm` 替代
 
-#### 导出组件
+---
 
-| 组件名 | 别名 | 描述 |
-| --- | --- | --- |
-| `GPage` | `GTablePage` | 完整的增删改查页面组件 |
-| `GSearch` | - | 搜索功能组件 |
-| `GTable` | - | 表格+弹窗组件 |
-| `GModal` | - | 模态框组件 |
-| `GForm` | - | 表单组件 |
-| `GFormItem` | - | 表单字段组件（即将废弃） |
-| `BaseTable` | - | 基础表格组件 |
+## 组件总览
 
-#### 导出方法
+| 组件 | 别名 | 说明 |
+|------|------|------|
+| `GPage` | `GTablePage` | 完整 CRUD 页面（搜索 + 表格 + 弹窗 + API） |
+| `GSearch` | - | 搜索工具栏 |
+| `GTable` | - | 表格 + 弹窗组合 |
+| `GModal` | - | 弹窗（内置表单） |
+| `GForm` | - | 表单容器与校验 |
+| `GFormItem` | - | 表单字段渲染器（即将废弃） |
+| `BaseTable` | - | 基础表格（含分页） |
 
-| 方法名 | 描述 | 来源 |
-| --- | --- | --- |
-| `useTable` | 分页表格数据管理钩子 | 从`@mengtr/vue3-common`导入 |
-| `useTreeTable` | 树状表格数据管理钩子 | 从`@mengtr/vue3-common`导入 |
-| `setTablePageKey` | 设置分页参数映射 | 从`@mengtr/vue3-common`导入 |
+从两套 UI 库均可导入 `useTable`、`useTreeTable`、`setTablePageKey`，内部从 `@mengtr/vue3-common` 转发。
 
-#### 使用示例
-
-```vue
-<template>
-  <!-- GPage 完整增删改查页面 -->
-  <GPage :options="pageOptions" @export="onExport" @import="onImport" />
-  
-  <!-- GSearch 搜索功能组件 -->
-  <GSearch :options="searchOptions" @search="onSearch" @reset="onReset" />
-  
-  <!-- GTable 表格+弹窗组件 -->
-  <GTable :options="tableOptions" />
-  
-  <!-- BaseTable 基础表格组件 -->
-  <BaseTable :type="1" ref="tableRef" :options="baseTableOptions">
-    <template #bodyCell="{ column, record, text, index }">
-      <!-- 自定义单元格内容 -->
-      <span v-if="column.property === 'status'">
-        <el-tag :type="record.status === 1 ? 'success' : 'danger'">
-          {{ record.status === 1 ? '启用' : '禁用' }}
-        </el-tag>
-      </span>
-    </template>
-  </BaseTable>
-</template>
-
-<script setup lang="ts">
-import { GPage, GSearch, GTable, BaseTable, useTable } from '@mengtr/vue3-element'
-import axios from 'axios'
-
-// 配置与@mengtr/vue3-antdv相同
-const pageOptions = {
-  // ... 配置内容与@mengtr/vue3-antdv相同
-}
-
-const searchOptions = {
-  // ... 配置内容与@mengtr/vue3-antdv相同
-}
-
-const tableOptions = {
-  // ... 配置内容与@mengtr/vue3-antdv相同
-}
-
-const baseTableOptions = {
-  // ... 配置内容与@mengtr/vue3-antdv相同
-}
-
-// 事件处理
-const onExport = () => { /* 导出逻辑 */ }
-const onImport = () => { /* 导入逻辑 */ }
-const onSearch = (data) => { /* 搜索逻辑 */ }
-const onReset = () => { /* 重置逻辑 */ }
-</script>
-```
+---
 
 ## 组件详细说明
 
 ### GPage / GTablePage
 
-完整的增删改查页面组件，集成了搜索、表格、分页、模态框等功能。
+完整增删改查页面，集成搜索、表格、分页、弹窗、CRUD API。
 
-#### 属性
+#### Props
 
 | 属性 | 类型 | 描述 |
-| --- | --- | --- |
-| `options` | `IPageOptions` | 页面配置项，包含搜索、表格、模态框和API配置 |
-| `disabled` | `boolean` | 是否禁用 |
+|------|------|------|
+| `options` | `IPageOptions` | 完整页面配置（search + table + modal + API） |
+| `disabled` | `boolean` | 是否禁用表单 |
 
-#### 事件
+#### Events
 
-| 事件名 | 描述 | 参数 |
-| --- | --- | --- |
-| `export` | 导出事件 | - |
-| `import` | 导入事件 | - |
-| `search` | 搜索事件 | `data: object` |
-| `reset` | 重置事件 | - |
+| 事件 | 参数 | 说明 |
+|------|------|------|
+| `export` | `data: object` | 点击导出按钮 |
+| `import` | `data: object` | 点击导入按钮 |
+| `search` | `data: object` | 触发搜索 |
+| `reset` | - | 触发重置 |
+
+#### Slots
+
+| 插槽 | 参数 | 说明 |
+|------|------|------|
+| `#button` | `{ param }` | 搜索栏按钮区扩展开口 |
+
+#### IPageOptions 类型
+
+```typescript
+interface IPageOptions {
+  search: ISearch       // 搜索配置
+  table: ITable         // 表格配置
+  modal: IModal         // 弹窗配置
+  API: IPAI             // CRUD API 接口
+}
+
+interface IPAI {
+  getPage: (params) => Promise<ITablePageResponse>  // 分页列表
+  detailApi?: (id) => Promise<any>                   // 详情
+  delApi?: (id) => Promise<any>                      // 删除
+  putApi?: (data) => Promise<any>                    // 更新
+  postApi?: (data) => Promise<any>                   // 新增
+}
+```
+
+---
 
 ### GSearch
 
-搜索功能组件，支持多种搜索字段类型。
+搜索工具栏，支持多种字段类型。
 
-#### 属性
+#### Props
 
-| 属性 | 类型 | 描述 |
-| --- | --- | --- |
-| `options` | `ISearch` | 搜索配置项 |
+| 属性 | 类型 | 默认值 | 描述 |
+|------|------|--------|------|
+| `options` | `ISearch` | - | 搜索配置项 |
 
-#### 事件
+#### Events
 
-| 事件名 | 描述 | 参数 |
-| --- | --- | --- |
-| `search` | 搜索事件 | `data: object` |
-| `reset` | 重置事件 | - |
-| `create` | 新增事件 | - |
-| `export` | 导出事件 | - |
-| `import` | 导入事件 | - |
+| 事件 | 参数 | 说明 |
+|------|------|------|
+| `search` | `data: object, type: boolean` | 搜索（type=false 时不重置分页） |
+| `reset` | - | 重置搜索条件 |
+| `create` | - | 新增按钮 |
+| `export` | `data: object` | 导出 |
+| `import` | `data: object` | 导入 |
+
+#### Expose
+
+| 方法 | 说明 |
+|------|------|
+| `onSearch(type?)` | 手动触发搜索 |
+| `onReset()` | 手动重置 |
+| `onSetParam(obj, type?)` | 设置搜索参数 |
+| `onCreate()` | 触发新增 |
+
+#### ISearch 类型
+
+```typescript
+interface ISearch {
+  searchOptions: TSearchOption[]   // 搜索字段配置
+  enableExport?: boolean           // 显示导出按钮
+  enableImport?: boolean           // 显示导入按钮
+  enableCreate?: boolean           // 显示新增按钮
+  span?: number                    // 字段栅格宽度（默认 6）
+}
+```
+
+#### TSearchOption 字段类型
+
+| 类型 | 接口 | 额外字段 |
+|------|------|---------|
+| `'string'` | `IStringSearchField` | - |
+| `'number'` | `INumberSearchField` | - |
+| `'datapicker'` | `IDataPickerSearchField` | `picker: 'hour' \| 'date' \| 'month' \| 'year'` |
+| `'rangepicker'` | `IRangePickerSearchField` | `picker`, `config: { startKey, endKey }` |
+| `'select'` | `ISelectSearchField` | `options: { label, value }[]` |
+| `'treeselect'` | `ISelectSearchField` | `options: { label, value }[]` |
+
+---
 
 ### GTable
 
-表格+弹窗组件，集成了表格和模态框功能。
+表格 + 弹窗组合组件，内部集成 `BaseTable` 和 `GModal`，通过 key 1/2/3 分别绑定编辑/详情/删除操作。
 
-#### 属性
+#### Props
 
-| 属性 | 类型 | 描述 |
-| --- | --- | --- |
-| `options` | `ITable` | 表格配置项 |
+| 属性 | 类型 | 默认值 | 描述 |
+|------|------|--------|------|
+| `options` | `IPageOptions` | - | 页面配置（取其中 table + modal + API） |
+| `type` | `1 \| 2` | 1 | 1=编辑模式，2=只读模式 |
+
+#### Expose
+
+| 方法 | 说明 |
+|------|------|
+| `onCreate()` | 打开新增弹窗 |
+| `onSearch(data?)` | 触发表格搜索 |
+| `onReset(obj?)` | 重置表格搜索 |
+
+#### ITable 类型
+
+```typescript
+interface ITable {
+  columns: ITableColumn[]       // 列配置
+  actions: IAction[]            // 操作按钮配置
+  initParam?: Param             // 初始查询参数
+  rowKey?: string               // 行 key（默认 'id'）
+  bordered?: boolean            // 是否显示边框
+  init?: boolean                // 是否初始化加载
+  pageKey?: { page?, size?, records? }  // 分页字段映射
+}
+
+interface ITableColumn {
+  key: string
+  title: string
+  dataIndex?: string
+  width?: number
+  align?: 'left' | 'center' | 'right'
+  fixed?: 'left' | 'right'
+  ellipsis?: boolean
+  render?: (row) => any
+}
+
+type IAction = {
+  key: 1 | 2 | 3               // 1=编辑, 2=详情, 3=删除
+  label: string
+  labelShow?: boolean           // true=显示文字, false=仅图标
+  local?: boolean               // true=前端填充不调详情接口
+  config?: { key, value }       // 条件显隐
+  className?: string
+} | {
+  key: number                   // 4+ = 自定义操作
+  label: string
+  callback: (row) => void       // 需要自定义回调
+  labelShow?: boolean
+  local?: boolean
+  config?: { key, value }
+  className?: string
+}
+```
+
+#### Slots
+
+| 插槽 | 参数 | 说明 |
+|------|------|------|
+| `#bodyCell` | `{ column, record, text, index }` | 自定义单元格（同 antdv/element 原生） |
+| `#action` | `{ record }` | 操作列最前面插入 |
+| `#actionBefore` | `{ record }` | 操作列 actions 数组前 |
+| `#actionAfter` | `{ record }` | 操作列 actions 数组后 |
+
+---
+
+### GModal
+
+弹窗组件，内置 `GForm` 表单。
+
+#### Props
+
+| 属性 | 类型 | 默认值 | 描述 |
+|------|------|--------|------|
+| `options` | `IModal` | - | 弹窗配置 |
+| `data` | `Record<string, any>` | `{}` | 编辑时填充数据 |
+| `open` | `boolean` | `false` | v-model 双向绑定弹窗显隐 |
+
+#### Events
+
+| 事件 | 参数 | 说明 |
+|------|------|------|
+| `ok` | `formData: object` | 点击确认（校验通过后触发） |
+| `cancel` | - | 点击取消 |
+
+#### IModal 类型
+
+```typescript
+interface IModal {
+  hide?: boolean                         // 隐藏弹窗（表格内内联表单场景）
+  initParam?: Param                      // 初始化附加参数
+  callback?: (formData) => void          // 弹窗打开时的回调
+  config?: { title?: string, width?: number | string }
+  form: IModalForm                       // 表单配置
+}
+
+interface IModalForm {
+  config: { labelCol?, wrapperCol? }
+  fields: IFormItem[]                    // 表单字段配置
+}
+```
+
+---
+
+### GForm
+
+表单容器，负责校验和字段渲染。
+
+#### Props
+
+| 属性 | 类型 | 默认值 | 描述 |
+|------|------|--------|------|
+| `formData` | `object` | `{}` | v-model 表单数据 |
+| `options` | `IModalForm` | - | 表单配置 |
+| `disabled` | `boolean` | `false` | 是否禁用 |
+
+#### Expose
+
+| 方法 | 说明 |
+|------|------|
+| `validateFields()` | 校验所有字段，通过返回 Promise |
+| `resetFields()` | 重置表单到初始状态 |
+
+---
 
 ### BaseTable
 
-基础表格组件，支持分页、排序、筛选等功能。
+基础表格组件，封装了 `a-table` / `el-table` 和分页器。
 
-#### 属性
+#### Props
 
-| 属性 | 类型 | 描述 | 默认值 |
-| --- | --- | --- | --- |
-| `type` | `1 \| 2` | 表格类型，1表示普通表格，2表示树形表格 | 1 |
-| `options` | `IProps` | 表格配置项 | `{}` |
+| 属性 | 类型 | 默认值 | 描述 |
+|------|------|--------|------|
+| `type` | `1 \| 2` | 1 | 1=分页表格，2=树形表格 |
+| `options` | `IProps` | `{}` | 表格配置 |
 
-#### 插槽
+#### Slots
 
-| 插槽名 | 描述 | 参数 |
-| --- | --- | --- |
-| `bodyCell` | 自定义单元格内容 | `{ column, record, text, index }` |
+| 插槽 | 参数 | 说明 |
+|------|------|------|
+| `#bodyCell` | `{ column, record, text, index }` | 自定义单元格 |
 
-#### 暴露方法
+#### Expose
 
-| 方法名 | 描述 | 参数 |
-| --- | --- | --- |
-| `onSearch` | 触发搜索 | `(data?: any) => void` |
-| `onReset` | 重置搜索 | `() => void` |
-| `onSetParam` | 设置参数 | `(param: any) => void` |
-| `search` | 搜索对象 | `Ref<object>` |
-| `pagination` | 分页对象 | `Ref<object>` |
+| 方法 | 说明 |
+|------|------|
+| `onSearch(data?)` | 触发搜索 |
+| `onReset(obj?)` | 重置搜索 |
+| `onSetParam(param)` | 设置参数 |
+| `search` | 当前搜索条件（Ref） |
+| `pagination` | 分页状态（Ref） |
 
-## 开发
-
-### 安装依赖
-
-```bash
-pnpm install
-```
-
-### 构建所有包
-
-```bash
-pnpm run build
-```
-
-### 单独构建某个包
-
-```bash
-# 构建vue3-antdv包
-pnpm --filter @mengtr/vue3-antdv run build
-
-# 构建vue3-element包
-pnpm --filter @mengtr/vue3-element run build
-
-# 构建vue3-common包
-pnpm --filter @mengtr/vue3-common run build
-```
-
-### 发布包
-
-```bash
-# 发布所有包
-pnpm publish -r
-
-# 单独发布某个包
-pnpm --filter @mengtr/vue3-antdv publish
-```
-
-## 类型定义
-
-### IProps
-
-表格配置项类型：
+#### IProps 类型
 
 ```typescript
-export interface IProps<T = any, P = any> {
-    columns: P[]           // 表格列配置
-    data: T                // 数据获取函数
-    initParam?: any        // 初始化参数
-    rowKey?: string        // 行键
-    scroll?: { x?: number; y?: number }  // 滚动配置
-    bordered?: boolean     // 是否显示边框
-    init?: boolean         // 是否初始化数据
+interface IProps<T = any, P = any> {
+  columns: P[]                     // 列配置
+  data: T                          // 数据获取函数
+  initParam?: any                  // 初始查询参数
+  rowKey?: string                  // 行 key
+  scroll?: { x?, y? }             // 滚动配置
+  bordered?: boolean               // 边框
+  init?: boolean                   // 是否初始化加载
 }
 ```
 
-### GetData
+---
 
-数据获取函数类型：
+## FormItem 表单字段
 
-```typescript
-export type GetData<T = any> = (params: { page: { page: number; size: number }; param: any }) => Promise<{ [key: string]: any } & { records: T[]; total: number }>
-```
-
-### TreeData
-
-树状数据获取函数类型：
+### 字段类型一览
 
 ```typescript
-export type TreeData<T = any> = (params: any) => Promise<T[]>
-```
-
-## FormItem 类型
-
-### TFormItemType
-
-表单字段类型枚举：
-
-```typescript
-export type TFormItemType =
-  | 'input'        // 输入框
+type TFormItemType =
+  | 'input'        // 文本输入框
   | 'textarea'     // 文本域
   | 'number'       // 数字输入框
   | 'select'       // 下拉选择器
-  | 'treeselect'   // 树状选择器
+  | 'treeselect'   // 树形选择器
   | 'switch'       // 开关
   | 'datepicker'   // 日期选择器
   | 'rangepicker'  // 日期范围选择器
-  | 'component'   // 自定义组件
-  | 'object'       // 对象类型（嵌套表单）
-  | 'array'        // 数组类型（动态表单）
+  | 'component'    // 自定义组件
+  | 'object'       // 嵌套对象
+  | 'array'        // 动态数组
 ```
 
-### IBaseFormItem
-
-基础表单字段接口：
+### 基础接口
 
 ```typescript
-export interface IBaseFormItem {
-  type: TFormItemType     // 字段类型
-  name: string            // 字段名
-  label?: string          // 标签名
-  span?: number           // 占用列数
-  defaultValue?: any      // 默认值
-  disabled?: boolean      // 是否禁用
-
-  dependsOn?: {           // 依赖条件
-    path: string[]        // 依赖字段路径
-    value: any            // 依赖字段值
+interface IBaseFormItem {
+  type: TFormItemType
+  name: string                     // 字段名（支持路径）
+  label?: string                   // 标签
+  span?: number                    // 栅格宽度（默认 24）
+  defaultValue?: any               // 创建时的默认值
+  disabled?: boolean               // 禁用
+  dependsOn?: {                    // 条件显隐
+    path: string[]                 // 依赖字段路径
+    value: any                     // 等于该值时显示
   }
-
-  watch?: {              // 监听配置
-    key: string[]        // 监听字段路径
-    callback: (value: any) => void  // 监听回调
-  },
-  config?: Recordable     // 额外配置
+  config?: Record<string, any>     // 透传给 UI 组件的属性
 }
 ```
 
-### IFormItem
+### 各类型字段的 config 说明
 
-表单字段联合类型：
+`config` 属性会直接透传给底层的 UI 组件，以下是各类型的常用参数：
 
-```typescript
-export type IFormItem =
-  | IInputFormItem        // 输入框
-  | ITextareaFormItem     // 文本域
-  | INumberFormItem       // 数字输入框
-  | ISelectFormItem       // 下拉选择器
-  | ISwitchFormItem       // 开关
-  | IDatePickerFormItem   // 日期选择器
-  | IRangePickerFormItem  // 日期范围选择器
-  | IComponentFormItem    // 自定义组件
-  | IObjectFormItem       // 对象类型（嵌套表单）
-  | IArrayFormItem        // 数组类型（动态表单）
-```
+| 字段类型 | 常用 config 参数 |
+|----------|----------------|
+| `input` | `placeholder`, `maxlength`, `show-count` |
+| `textarea` | `placeholder`, `rows`, `maxlength` |
+| `number` | `placeholder`, `min`, `max`, `step` |
+| `select` | `placeholder`, `mode`（multiple/tags）, `allow-clear` |
+| `treeselect` | `treeData`, `fieldNames`, `showCheckedStrategy`, `check-strictly` |
+| `switch` | `checked-children`, `un-checked-children` |
+| `datepicker` | `format`, `value-format`, `placeholder`, `disabled-date` |
+| `rangepicker` | `format`, `value-format`, `separator` |
+| `component` | 透传自定义组件的 props |
 
-## 搜索类型
-
-### TSearchType
-
-搜索字段类型枚举：
+### 嵌套字段
 
 ```typescript
-export type TSearchType =
-  | 'number'       // 数字类型
-  | 'string'       // 字符串类型
-  | 'datapicker'   // 日期选择器
-  | 'rangepicker'  // 日期范围选择器
-  | 'select'       // 下拉选择器
-  | 'treeselect'   // 树状选择器
-```
+// 对象类型（group）
+interface IObjectFormItem extends IBaseFormItem {
+  type: 'object'
+  fields: IFormItem[]      // 子字段
+}
 
-### TSearchOption
-
-搜索字段联合类型：
-
-```typescript
-export type TSearchOption =
-  | INumberSearchField       // 数字类型搜索字段
-  | IStringSearchField       // 字符串类型搜索字段
-  | IDataPickerSearchField   // 日期选择器搜索字段
-  | IRangePickerSearchField  // 日期范围选择器搜索字段
-  | ISelectSearchField       // 下拉选择器搜索字段
-```
-
-### ISearch
-
-搜索配置接口：
-
-```typescript
-export interface ISearch {
-  searchOptions: TSearchOption[]  // 搜索字段配置
-  enableExport?: boolean         // 是否启用导出
-  enableImport?: boolean         // 是否启用导入
-  enableCreate?: boolean         // 是否启用新增
-  span?: number                  // 搜索字段占用列数
+// 数组类型（动态列表）
+interface IArrayFormItem extends IBaseFormItem {
+  type: 'array'
+  fields: IFormItem[]      // 子字段模板
 }
 ```
 
-## 注意事项
+### 表单校验
 
-1. 确保你的项目使用Vue 3.5.0或以上版本
-2. 确保正确安装了对应的UI库依赖：
-   - 使用`@mengtr/vue3-antdv`时，需要安装`ant-design-vue`和`@ant-design/icons-vue`
-   - 使用`@mengtr/vue3-element`时，需要安装`element-plus`和`@element-plus/icons-vue`
-3. 建议使用pnpm作为包管理器，以获得最佳的工作空间支持
-4. `GFormItem`组件即将废弃，建议使用`GForm`组件替代
-5. 组件库提供了完整的TypeScript类型定义，建议使用TypeScript开发以获得更好的开发体验
+通过 `rules` 字段配置校验规则，格式与对应 UI 库一致：
+
+```typescript
+{
+  label: '名称',
+  name: 'name',
+  type: 'input',
+  rules: [{ required: true, message: '请输入名称' }]
+}
+```
+
+### 条件显隐（dependsOn）
+
+```typescript
+{
+  label: '具体原因',
+  name: 'reason',
+  type: 'input',
+  dependsOn: {
+    path: ['type'],        // 监听 formData.type
+    value: 'other'         // 当 type === 'other' 时显示
+  }
+}
+```
+
+### 值变更监听（callback）
+
+```typescript
+{
+  label: '省',
+  name: 'province',
+  type: 'select',
+  options: [...],
+  callback: (formData, field, oldValue, newValue) => {
+    // 当 province 变化时，清空 city
+    formData.city = undefined
+  }
+}
+```
+
+---
+
+## Hooks
+
+### useTable
+
+分页表格数据管理。
+
+```typescript
+const {
+  tableData,          // Ref<Array> - 表格数据
+  pagination,         // 分页配置
+  search,            // Ref<object> - 搜索条件
+  selectedRowKeys,   // 选中行 keys
+  rowSelection,      // 行选择配置
+  onSearch,          // (data?, reset?) => void
+  onReset,           // (obj?) => void
+  onSetParam,        // (param, ...args) => void
+} = useTable(
+  getData,           // (params) => Promise<ITablePageResponse>
+  init?,             // boolean - 是否初始化加载（默认 true）
+  param?,            // Param - 初始参数
+  pageKey?           // IPageKey - 分页字段映射（默认使用 setTablePageKey 全局配置）
+)
+```
+
+### useTreeTable
+
+树形/非分页表格数据管理（内部复用 useTable 逻辑，无分页）。
+
+```typescript
+const { tableData, onSearch, onReset, onSetParam } = useTreeTable(
+  getData,           // (params?) => Promise<T[]>
+  init?,             // boolean
+  param?             // Param
+)
+// 注意: pagination 返回 false
+```
+
+### useFormItems
+
+表单字段值管理 Hook（GFormItem 内部使用，也可单独使用）。
+
+```typescript
+const { getValue, setValue, addArrayItem, removeArrayItem, shouldShowField } = useFormItems(
+  formData,          // Ref<object>
+  fields,            // Ref<IFormItem[]>
+  fieldPath          // Ref<(string | number)[]>
+)
+```
+
+| 方法 | 说明 |
+|------|------|
+| `getValue(obj, keys)` | 按路径取值 |
+| `setValue(field, keys, value)` | 按路径赋值，自动触发 callback |
+| `addArrayItem(field, path, name)` | 数组字段新增一项 |
+| `removeArrayItem(path, name, index)` | 数组字段删除指定项 |
+| `shouldShowField(field, formData)` | 根据 dependsOn 判断是否显隐 |
+
+### setTablePageKey
+
+全局设置后端分页字段映射，一次设置全局生效。
+
+**默认值：**
+```typescript
+{ page: 'page', size: 'size', records: 'records', total: 'total' }
+```
+
+**自定义示例：**
+```typescript
+setTablePageKey({ page: 'pageNum', size: 'pageSize', records: 'rows', total: 'totalCount' })
+```
+
+### buildInitialFormData
+
+根据字段配置递归构建表单初始数据。
+
+```typescript
+buildInitialFormData(fields: IFormItem[], isCreate = false): Record<string, any>
+// isCreate = true 时使用 field.defaultValue，否则值为 undefined
+```
+
+---
+
+## 开发
+
+```bash
+# 安装依赖
+pnpm install
+
+# 构建所有包
+pnpm run build:all
+
+# 构建单个包
+pnpm build:common     # @mengtr/vue3-common
+pnpm build:antdv      # @mengtr/vue3-antdv
+pnpm build:element    # @mengtr/vue3-element
+
+# 发布
+pnpm pub:all          # 自动 commit + 发布三个包
+```
+
+### 可用脚本
+
+| 命令 | 说明 |
+|------|------|
+| `build:common` | 构建 common 包 |
+| `build:antdv` | 构建 antdv 包 |
+| `build:element` | 构建 element 包 |
+| `build:all` | 按顺序构建所有包 |
+| `pub:common` | 发布 common 包 |
+| `pub:antdv` | 发布 antdv 包 |
+| `pub:element` | 发布 element 包 |
+| `pub:all` | git commit + 发布所有包 |
+
+---
+
+## 完整类型索引
+
+```
+@mengtr/vue3-common 导出类型:
+  IPageOptions / IPageOptionsJSON    页面配置
+  IPAI / IPAIJSON                    CRUD API 接口
+  IBasePageOptions                   页面基础配置（无 API）
+  ISearch / TSearchOption            搜索配置
+  ITable / ITableColumn / IAction    表格配置
+  IModal / IModalForm                弹窗配置
+  IFormItem / IFormItem 联合类型      表单字段配置
+  IBaseFormItem                      表单字段基础接口
+  IProps                             表格组件 Props
+  GetData / TreeData                 数据获取类型
+  ITablePageResponse                 分页响应类型
+  IUseTableRes / ITableEvent         useTable 返回/事件类型
+  TFormItemType / TSearchType        字段类型枚举
+```
+
+---
 
 ## 许可证
 
